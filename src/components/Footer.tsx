@@ -18,10 +18,10 @@ export const Footer = () => {
         </div>
         <div>
           <div className="flex gap-[96px]">
-            <div className="flex gap-3 flex-col">
+            <div className="flex items-start gap-3 flex-col">
               <p className="text-[#FAFAFA] text-[14px]">Contact information</p>
               <div className="flex flex-col gap-[24px]">
-                <div className="flex gap-[12px] justify-center">
+                <div className="flex  gap-[12px] justify-center">
                   <Mail className="text-[#FAFAFA]" />
                   <h1 className="text-[#FAFAFA] text-[14px]">Email:</h1>
                   <p className="text-[#FAFAFA] text-[14px]">

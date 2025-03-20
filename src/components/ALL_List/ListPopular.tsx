@@ -24,7 +24,7 @@ export const ListPopular = () => {
             key={i}
             voteAverage={value.vote_average}
             imgSrc={`https://image.tmdb.org/t/p/original${
-              value.poster_path | backdrop_path
+              value.poster_path || value.backdrop_path
             }`}
           />
         ))}

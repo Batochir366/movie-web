@@ -2,6 +2,7 @@ import React from "react";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import { VoteAverage } from "../ALL_List/VoteAverage";
 export const DescriptionBox = ({
   original_title,
   vote_average,
@@ -19,15 +20,7 @@ export const DescriptionBox = ({
           <h1 className="text-[36px] text-white font-[700]">
             {original_title}
           </h1>
-          <div className="flex gap-2 items-center">
-            <Star className="text-[#FDE047] fill-[#FDE047] size-[28px]" />
-            <div className="flex justify-center items-center">
-              <h3 className="text-[#FAFAFA] text-[18px] font-[600] ">
-                {vote_average}
-              </h3>
-              <h3 className="text-[#71717A] text-[16px] font-[400] ">/10</h3>
-            </div>
-          </div>
+          <VoteAverage className="text-[#FAFAFA]" voteAverage={vote_average}/>
         </header>
         <p className="w-[1000px] text-[14px] text-[#FAFAFA] h-fit">
           {overview}
