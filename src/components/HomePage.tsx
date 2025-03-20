@@ -2,8 +2,9 @@ import React from "react";
 import { Nav } from "./Navigation/Nav";
 import { Upcoming } from "./Upcoming";
 import { ALL_List } from "./ALL_List";
+import { Footer } from "./Footer";
 
-export const Page = () => {
+export const HomePage = () => {
   return (
     <div className="w-fit h-screen bg-white">
       <Nav />
@@ -11,6 +12,9 @@ export const Page = () => {
         <Upcoming />
       </div>
       <ALL_List />
+      <div className="flex pt-[51px]">
+        <Footer />
+      </div>
     </div>
   );
 };

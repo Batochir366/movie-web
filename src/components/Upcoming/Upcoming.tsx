@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -8,40 +9,35 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import { DescriptionBox } from "./DescriptionBox";
+import axios from "axios";
 export const Upcoming = () => {
+  const [upcomingData, setUpcomingData] = useState([{}]);
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+      )
+      .then((res) => setUpcomingData(res.data.results));
+  }, []);
   return (
     <Carousel className="w-[1440px] h-[600px]">
       <CarouselContent className="w-[1440px] h-[600px]">
-        <CarouselItem className="w-[1440px] relative h-[600px]">
-          <DescriptionBox />
-          <Image
-            className="w-screen absolute h-[600px]"
-            height={600}
-            width={1440}
-            src="https://s3-alpha-sig.figma.com/img/c78e/5e57/16d36abbdaa8df480db189d5729e384a?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mLG2xOJZNT2vGCrvhDwo3-iKl0QLHOJCxUbykqD81OWYT61RDmWH~sY5qc4qVMmDHRoLdT3VXAnqpxjl4QRY7lvqwtvVTj2-RScRPADrSRE2X1dKJ6MNwI89GQsAr7CVA~Sw886s4cN3GzZCxbhX6nG5wCcsdExQ3ZifH-DrPK1y2qNpWDmJzamRmYUQB4G5gKUvdNeqjPEES5nuyWmp4tVWbJDWV1Ve6DECdtwn6WwE~0puD445Fe7qQpsvTO15bYmHP3E7sN6ZamI~BBe1H7Aisb1JjhHE35MH~r0CHClF6Ayy8aDTsnbuKYmE-rzkB3IlXZLoaZaJNRHFDc~Erg__"
-            alt="poster"
-          />
-        </CarouselItem>
-        <CarouselItem className="w-screen h-[600px]">
-          <DescriptionBox />
-          <Image
-            className="w-screen h-[600px]"
-            height={600}
-            width={1440}
-            src="https://s3-alpha-sig.figma.com/img/c78e/5e57/16d36abbdaa8df480db189d5729e384a?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mLG2xOJZNT2vGCrvhDwo3-iKl0QLHOJCxUbykqD81OWYT61RDmWH~sY5qc4qVMmDHRoLdT3VXAnqpxjl4QRY7lvqwtvVTj2-RScRPADrSRE2X1dKJ6MNwI89GQsAr7CVA~Sw886s4cN3GzZCxbhX6nG5wCcsdExQ3ZifH-DrPK1y2qNpWDmJzamRmYUQB4G5gKUvdNeqjPEES5nuyWmp4tVWbJDWV1Ve6DECdtwn6WwE~0puD445Fe7qQpsvTO15bYmHP3E7sN6ZamI~BBe1H7Aisb1JjhHE35MH~r0CHClF6Ayy8aDTsnbuKYmE-rzkB3IlXZLoaZaJNRHFDc~Erg__"
-            alt="poster"
-          />
-        </CarouselItem>
-        <CarouselItem className="w-screen h-[600px]">
-          <DescriptionBox />
-          <Image
-            className="w-[1440px] h-[600px]"
-            height={600}
-            width={1440}
-            src="https://s3-alpha-sig.figma.com/img/c78e/5e57/16d36abbdaa8df480db189d5729e384a?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mLG2xOJZNT2vGCrvhDwo3-iKl0QLHOJCxUbykqD81OWYT61RDmWH~sY5qc4qVMmDHRoLdT3VXAnqpxjl4QRY7lvqwtvVTj2-RScRPADrSRE2X1dKJ6MNwI89GQsAr7CVA~Sw886s4cN3GzZCxbhX6nG5wCcsdExQ3ZifH-DrPK1y2qNpWDmJzamRmYUQB4G5gKUvdNeqjPEES5nuyWmp4tVWbJDWV1Ve6DECdtwn6WwE~0puD445Fe7qQpsvTO15bYmHP3E7sN6ZamI~BBe1H7Aisb1JjhHE35MH~r0CHClF6Ayy8aDTsnbuKYmE-rzkB3IlXZLoaZaJNRHFDc~Erg__"
-            alt="poster"
-          />
-        </CarouselItem>
+        {upcomingData.slice(0, 3).map((value: any, index: any) => (
+          <CarouselItem key={index} className="w-[1440px] relative h-[600px]">
+            <DescriptionBox
+              overview={value.overview}
+              vote_average={value.vote_average}
+              original_title={value.original_title}
+            />
+            <Image
+              className="w-screen absolute h-[600px]"
+              height={600}
+              width={1440}
+              src={`https://image.tmdb.org/t/p/original${value.backdrop_path}`}
+              alt="poster"
+            />
+          </CarouselItem>
+        ))}
       </CarouselContent>
       <CarouselPrevious className="flex left-[44px]" />
       <CarouselNext className="flex right-[44px]" />
