@@ -14,18 +14,18 @@ export const ListTopRated = () => {
       .then((res) => setData(res.data.results));
   }, []);
   return (
-    <div className="flex flex-col gap-[32px]">
-      <ListHeader ListName="Popular" />
-      <div className="grid gap-[32px] grid-cols-5 grid-rows-2">
-        {data?.slice(0, 10).map((value: any, i: any) => (
-          <Movies
-            name={value.original_title}
-            key={i}
-            voteAverage={value.vote_average}
-            imgSrc={`https://image.tmdb.org/t/p/original${value.poster_path}`}
-          />
-        ))}
-      </div>
+    <div className="gap-[32px] px-[80px] max-w-max justify-between flex flex-wrap">
+      <ListHeader ListName="Top Rated" />
+      {data?.slice(0, 10).map((value: any, i: any) => (
+        <Movies
+          name={value.original_title}
+          key={i}
+          voteAverage={value.vote_average}
+          imgSrc={`https://image.tmdb.org/t/p/original${
+            value.poster_path || value.backdrop_path
+          }`}
+        />
+      ))}
     </div>
   );
 };

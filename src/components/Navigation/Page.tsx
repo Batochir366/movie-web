@@ -3,7 +3,7 @@ import { Nav } from "./Nav";
 
 export const Page = () => {
   return (
-    <div className="w-fit h-fit bg-white">
+    <div className="w-screen h-screen bg-white">
       <Nav />
     </div>
   );

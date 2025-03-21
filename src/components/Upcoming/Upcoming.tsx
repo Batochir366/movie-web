@@ -15,15 +15,15 @@ export const Upcoming = () => {
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+        `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
       .then((res) => setUpcomingData(res.data.results));
   }, []);
   return (
-    <Carousel className="w-[1440px] h-[600px]">
-      <CarouselContent className="w-[1440px] h-[600px]">
-        {upcomingData.slice(0, 3).map((value: any, index: any) => (
-          <CarouselItem key={index} className="w-[1440px] relative h-[600px]">
+    <Carousel className="w-full h-[600px]">
+      <CarouselContent className="w-full h-[600px]">
+        {upcomingData.slice(0, 3).map((value: any, index: number) => (
+          <CarouselItem key={index} className="w-full relative h-[600px]">
             <DescriptionBox
               overview={value.overview}
               vote_average={value.vote_average}

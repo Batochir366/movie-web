@@ -6,7 +6,7 @@ import { ListTopRated } from "./ListTopRated";
 
 export const ALL_List = () => {
   return (
-    <div className="flex flex-col pt-[52px] px-[80px] gap-[52px]">
+    <div className="flex flex-col w-full pt-[52px]  gap-[52px]">
       <ListUpcoming />
       <ListPopular />
       <ListTopRated />

@@ -6,7 +6,7 @@ import { Footer } from "./Footer";
 
 export const HomePage = () => {
   return (
-    <div className="w-fit h-screen bg-white">
+    <div className="w-full flex flex-col  h-full bg-white">
       <Nav />
       <div className="flex pt-[24px]">
         <Upcoming />

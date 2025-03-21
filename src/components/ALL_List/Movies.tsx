@@ -24,7 +24,7 @@ export const Movies = ({
         alt="poster"
       />
       <div className="flex flex-col p-2 gap-[3px]">
-        <VoteAverage voteAverage={voteAverage}/>
+        <VoteAverage voteAverage={voteAverage} />
         <p className="text-[12px] text-[#09090b] w-[214px] h-fit">{name}</p>
       </div>
     </div>
