@@ -4,7 +4,7 @@ import { InputSearch } from "./InputSearch";
 import { Film, Moon } from "lucide-react";
 export const Nav = () => {
   return (
-    <nav className="w-full h-full border border-solid border-black px-[80px] py-[11.5px]">
+    <nav className="w-full h-full px-[80px] py-[11.5px]">
       <div className="bg-white w-full justify-around flex">
         <div className="flex gap-2 items-center justify-center">
           <Film className="text-indigo-700 size-[20px]" />
