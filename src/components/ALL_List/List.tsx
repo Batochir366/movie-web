@@ -7,15 +7,14 @@ import { VoteAverage } from "./VoteAverage";
 import Movies from "./Movies";
 
 export const List = () => {
-  const [data,setData] = useState()
+  
   const [data2 ,setData2]=useState()
-  const arr=["upcoming",""]
-  useEffect(()=>{
-    axios.get(`https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`).then((responce)=> setData(responce.data.results))
-  },[])
+  const arr = ["upcoming","top_rated","popular"]
   return (
-    <div className="flex flex-col w-full pt-[52px]  gap-[52px]">
-      <Movies Data={data} datatype="upcoming"/>
+    <div className="flex flex-col w-full pt-[52px] gap-[52px]">
+      <Movies ListName="Upcoming" datatype={arr[0]} />
+      <Movies ListName="Popular" datatype={arr[1]} />
+      <Movies ListName="Top Rated" datatype={arr[1]} />
     </div>
   );
 };
