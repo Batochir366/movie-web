@@ -4,6 +4,7 @@ import { VoteAverage } from "./VoteAverage";
 import axios from "axios";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const UpcomingData = ({
   className,
@@ -20,6 +21,10 @@ const UpcomingData = ({
       )
       .then((response) => setUpcomingData(response.data.results));
   }, []);
+  const router = useRouter();
+  const HandleOnClick = (id: string) => {
+    router.push(`details/${id}`);
+  };
   return (
     <div className="gap-[32px] w-full justify-between flex px-[80px] flex-wrap">
       <div className={`flex w-full justify-between ` + className}>
@@ -29,7 +34,11 @@ const UpcomingData = ({
         </Button>
       </div>
       {upcomingData?.slice(0, 10).map((value: any, i: any) => (
-        <div key={i} className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]">
+        <div
+          onClick={() => HandleOnClick(value.id)}
+          key={i}
+          className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]"
+        >
           <Image
             className="w-[230px] h-[340px] rounded-t-[8px] "
             height={340}

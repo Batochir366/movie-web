@@ -2,6 +2,7 @@
 
 import { ListHeader } from "@/components/ALL_List/ListHeader";
 import MovieDetails from "@/components/ALL_List/MovieDetails";
+import Trailer from "@/components/ALL_List/Trailer";
 import { Separator } from "@/components/MovieSearch/Separator";
 import axios from "axios";
 import { Star } from "lucide-react";
@@ -19,7 +20,11 @@ type datatype = {
   adult: boolean;
   vote_average: number;
   vote_count: number;
+  genres:genres[]
 };
+type genres = {
+  id:string
+}
 const page = ({
   voteAverage,
   className,
@@ -66,10 +71,8 @@ const page = ({
                         }
                       >
                         {data?.vote_average
-                          ? (Math.round(data?.vote_average * 10) / 10).toFixed(
-                              1
-                            )
-                          : null}
+                          && (Math.round(data?.vote_average * 10) / 10).toFixed(1)                                                      
+                          }
                       </h3>
                       <h3 className="text-[#71717A] text-[16px] font-[400] ">
                         /10
@@ -97,15 +100,14 @@ const page = ({
               width={290}
               height={428}
             />
-            <iframe className="w-full rounded-sm border-black border border-solid h-[428px]" />
+            <Trailer/>
           </div>
         </div>
         <div className="flex gap-5 pt-[32px] flex-col">
           <div className="flex h-[20px] flex-wrap gap-3">
-            {data?.map((value,index) => )}
-            <button className="bg-white border border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit">
-             
-            </button>
+            {data?.genres.map((value: any, index: any) => (
+              <button key={index} className="bg-white border border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit">{value.name}</button>
+            ))}
           </div>
           <p className="text-[16px] text-black">{data?.overview}</p>
           <MovieDetails />

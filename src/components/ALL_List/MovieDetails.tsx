@@ -32,6 +32,7 @@ const MovieDetails = () => {
       )
       .then((response) => setData(response.data));
   }, []);
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex gap-[53px] ">
