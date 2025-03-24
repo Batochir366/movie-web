@@ -18,6 +18,7 @@ type crew = {
   known_for_department: string;
   name: string;
   job: string;
+  department: string;
 };
 const MovieDetails = () => {
   const [data, setData] = useState<datatype>();
@@ -34,7 +35,21 @@ const MovieDetails = () => {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex gap-[53px] ">
-        <h1 className="text-[16px] font-[700]">Director</h1>
+        <h1 className="text-[17px] w-[67px] font-[700]">Director</h1>
+        {data?.crew.map((value, index) => {
+          return (
+            value.known_for_department &&
+            value.department === "Writing" && (
+              <h1 className="text-[16px]" key={index}>
+                {value.name}
+              </h1>
+            )
+          );
+        })}
+      </div>
+      <Separator />
+      <div className="flex gap-[53px]">
+        <h1 className="text-[17px]  w-[67px] font-[700]">Writers</h1>
         {data?.crew.map((value, index) => {
           return (
             value.job === "Director" && (
@@ -47,12 +62,7 @@ const MovieDetails = () => {
       </div>
       <Separator />
       <div className="flex gap-[53px]">
-        <h1 className="text-[16px] font-[700]">Writers</h1>
-        <h1 className="text-[16px]">{"test"}</h1>
-      </div>
-      <Separator />
-      <div className="flex gap-[53px]">
-        <h1 className="text-[16px] font-[700]">Stars</h1>
+        <h1 className="text-[17px]  w-[67px] font-[700]">Stars</h1>
         {data?.cast.slice(0, 3).map((value, index) => (
           <h1 key={index} className="text-[16px]">
             {value.name}

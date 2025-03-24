@@ -17,6 +17,8 @@ type datatype = {
   backdrop_path: string;
   release_date: string;
   adult: boolean;
+  vote_average: number;
+  vote_count: number;
 };
 const page = ({
   voteAverage,
@@ -63,13 +65,22 @@ const page = ({
                           `text-[#09090B] text-[18px] font-[600] ` + className
                         }
                       >
-                        {"6.9"}
+                        {data?.vote_average
+                          ? (Math.round(data?.vote_average * 10) / 10).toFixed(
+                              1
+                            )
+                          : null}
                       </h3>
                       <h3 className="text-[#71717A] text-[16px] font-[400] ">
                         /10
                       </h3>
                     </div>
-                    <p className="text-[#71717A] text-[12px]">{"31k"}</p>
+                    <p className="text-[#71717A] text-[12px]">
+                      {data?.vote_count
+                        ? (data?.vote_count - (data?.vote_count % 1000)) / 1000
+                        : null}
+                      k
+                    </p>
                   </div>
                 </div>
                 <p>{}</p>
@@ -86,14 +97,15 @@ const page = ({
               width={290}
               height={428}
             />
-            <iframe className="w-[760px] rounded-sm border-black border border-solid h-[428px]" />
+            <iframe className="w-full rounded-sm border-black border border-solid h-[428px]" />
           </div>
         </div>
         <div className="flex gap-5 pt-[32px] flex-col">
-          <div className="flex h-[20px] flex-wrap gap-3 bg-amber-200">
-            <div className="bg-red-700 h-[20px] rounded-full w-fit">35</div>
-            <div className="bg-red-700 h-[20px] rounded-full w-fit">2</div>
-            <div className="bg-red-700 h-[20px] rounded-full w-fit">3</div>
+          <div className="flex h-[20px] flex-wrap gap-3">
+            {data?.map((value,index) => )}
+            <button className="bg-white border border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit">
+             
+            </button>
           </div>
           <p className="text-[16px] text-black">{data?.overview}</p>
           <MovieDetails />
