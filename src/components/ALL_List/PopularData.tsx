@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { ListHeader } from "./ListHeader";
 import Image from "next/image";
 import { VoteAverage } from "./VoteAverage";
 import axios from "axios";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 
-const Movies = ({
-  datatype,
+const PopularData = ({
   className,
   ListName,
 }: {
-  datatype: string[number];
   className?: string;
   ListName?: string;
 }) => {
-  const [data, setData] = useState([{}]);
+  const [popularData, setPopularData] = useState([{}]);
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${datatype}?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+        `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
-      .then((response) => setData(response.data.results));
+      .then((response) => setPopularData(response.data.results));
   }, []);
   return (
-    <div className=" gap-[32px] w-full justify-between flex px-[80px] flex-wrap">
+    <div className="gap-[32px] w-full justify-between flex px-[80px] flex-wrap">
       <div className={`flex w-full justify-between ` + className}>
         <h1 className="font-[600] text-[24px]">{ListName}</h1>
         <Button className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] border-none font-[500] text-[#18181B] text-[14px]">
           See more <ArrowRight className="text-black hover:bg-none" />
         </Button>
       </div>
-      {data?.slice(0, 10).map((value: any, i: any) => (
+      {popularData?.slice(0, 10).map((value: any, i: any) => (
         <div key={i} className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]">
           <Image
             className="w-[230px] h-[340px] rounded-t-[8px] "
@@ -54,4 +51,4 @@ const Movies = ({
   );
 };
 
-export default Movies;
+export default PopularData;

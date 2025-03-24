@@ -1,10 +1,23 @@
+"use client";
+
 import { ListHeader } from "@/components/ALL_List/ListHeader";
-import { VoteAverage } from "@/components/ALL_List/VoteAverage";
+import MovieDetails from "@/components/ALL_List/MovieDetails";
 import { Separator } from "@/components/MovieSearch/Separator";
+import axios from "axios";
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useParams } from "next/navigation";
+import { log } from "node:console";
+import React, { useEffect, useState } from "react";
+
+type datatype = {
+  original_title: string;
+  overview: string;
+  poster_path: string;
+  backdrop_path: string;
+  release_date: string;
+  adult: boolean;
+};
 const page = ({
   voteAverage,
   className,
@@ -12,20 +25,30 @@ const page = ({
   voteAverage: string;
   className: string;
 }) => {
-  const router = useRouter()
-  const HandleOnClick = ((id:string)=>{
-    router.push(`/details/${id}`)
-  }
-  )
+  const [data, setData] = useState<datatype>();
+  const id = useParams();
+  console.log(id);
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${id.id}?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+      )
+      .then((response) => setData(response.data));
+  }, []);
   return (
     <div className="w-fit h-fit bg-white">
       <div className="flex flex-col px-[178px] bg-white">
         <div className="flex flex-col pt-6 gap-6">
           <div className="flex w-full justify-between gap-1">
             <div className="flex flex-col gap-1 ">
-              <h1 className="text-black font-[700] text-[36px]">{"fdsh"}</h1>
+              <h1 className="text-black font-[700] text-[36px]">
+                {data?.original_title}
+              </h1>
               <div className="flex">
-                <p className="text-black text-[18px]">{`${"2025.3.21"} · ${"GG"} · ${"2h 40m"}`}</p>
+                <p className="text-black text-[18px]">{`${
+                  data?.release_date
+                } · ${data?.adult === false ? "PG" : "R+18"} · ${"2h 40m"}`}</p>
               </div>
             </div>
             <div className="flex gap-2 flex-col">
@@ -56,8 +79,10 @@ const page = ({
           <div className="flex gap-8">
             <Image
               className="rounded-sm"
-              src={""}
-              alt={""}
+              src={`https://image.tmdb.org/t/p/original${
+                data?.poster_path || data?.backdrop_path
+              }`}
+              alt={"poster"}
               width={290}
               height={428}
             />
@@ -70,28 +95,8 @@ const page = ({
             <div className="bg-red-700 h-[20px] rounded-full w-fit">2</div>
             <div className="bg-red-700 h-[20px] rounded-full w-fit">3</div>
           </div>
-          <p className="text-[16px] text-black">
-            {
-              "Elphaba, a misunderstood young woman because of her green skin, and Glinda, a popular girl, become friends at Shiz University in the Land of Oz. After an encounter with the Wonderful Wizard of Oz, their friendship reaches a crossroads. "
-            }
-          </p>
-          <div className="flex flex-col gap-5">
-            <div className="flex gap-[53px]">
-              <h1 className="text-[16px] font-[700]">{"test"}</h1>
-              <h1 className="text-[16px]">{"test"}</h1>
-            </div>
-            <Separator />
-            <div className="flex gap-[53px]">
-              <h1 className="text-[16px] font-[700]">{"test"}</h1>
-              <h1 className="text-[16px]">{"test"}</h1>
-            </div>
-            <Separator />
-            <div className="flex gap-[53px]">
-              <h1 className="text-[16px] font-[700]">{"test"}</h1>
-              <h1 className="text-[16px]">{"test"}</h1>
-            </div>
-            <Separator />
-          </div>
+          <p className="text-[16px] text-black">{data?.overview}</p>
+          <MovieDetails />
         </div>
         <div className="flex pb-[113px] pt-[32px]">
           <div className="flex flex-col gap-8">
