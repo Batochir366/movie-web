@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function Input({ HandleOnChange }: { HandleOnChange: any }) {
+function Input({ HandleOnChange }: { HandleOnChange?: any}) {
   return (
     <input
       placeholder="Search.."
@@ -11,5 +11,4 @@ function Input({ HandleOnChange }: { HandleOnChange: any }) {
     />
   );
 }
-
-export { Input };
+export default Input ;

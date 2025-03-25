@@ -23,7 +23,6 @@ type crew = {
 const MovieDetails = () => {
   const [data, setData] = useState<datatype>();
   const id = useParams();
-  console.log(id);
 
   useEffect(() => {
     axios

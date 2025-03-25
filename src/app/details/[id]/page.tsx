@@ -26,6 +26,7 @@ type datatype = {
 };
 type genres = {
   id: string;
+  name:string
 };
 const page = ({
   voteAverage,
@@ -36,7 +37,7 @@ const page = ({
 }) => {
   const [data, setData] = useState<datatype>();
   const id = useParams();
-  console.log(id);
+  
 
   useEffect(() => {
     axios
@@ -45,6 +46,7 @@ const page = ({
       )
       .then((response) => setData(response.data));
   }, []);
+  console.log(data?.genres[0]?.id);
   return (
     <div className="w-fit h-fit bg-white">
       <div className="flex flex-col px-[178px] bg-white">
@@ -111,7 +113,7 @@ const page = ({
             {data?.genres.map((value: any, index: any) => (
               <button
                 key={index}
-                className="bg-white border border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit"
+                className="bg-white cursor-pointer border border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit"
               >
                 {value.name}
               </button>
@@ -123,7 +125,7 @@ const page = ({
         <div className="flex pb-[113px] pt-[32px]">
           <div className="flex flex-col gap-8"></div>
         </div>
-        <Movies d />
+       
       </div>
     </div>
   );

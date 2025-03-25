@@ -47,10 +47,11 @@ const Trailer = () => {
         height={428}
       />
       <Dialog>
-        <div className="absolute flex pl-[24px] pt-[370px]">
-          <DialogTrigger className="flex size-fit bg-white hover:bg-gray-200 active:bg-black rounded-full border p-2">
-            <PlayIcon className="size-4" />
+        <div className="absolute gap-3 justify-center items-center flex pl-[24px] pt-[370px]">
+          <DialogTrigger className="flex cursor-pointer size-fit bg-white hover:bg-gray-200 active:bg-black rounded-full border p-2">
+            <PlayIcon className="size-4" /> 
           </DialogTrigger>
+          <p className="text-white text-[16px]">Play trailer </p>
         </div>
         <DialogContent>
           <DialogHeader>
@@ -60,8 +61,8 @@ const Trailer = () => {
                 <iframe
                   key={index}
                   className="flex relative w-[760px] h-[450px] bg-no-repeat rounded-sm"
-                  width={760}
-                  height={425}
+                  width={997}
+                  height={561}
                   src={`https://www.youtube.com/embed/${value.key}?si=bB_vz5nDlE-bwi2u`}
                   title="YouTube video player"
                   frameBorder="0"
