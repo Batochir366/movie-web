@@ -2,6 +2,7 @@
 
 import { ListHeader } from "@/components/ALL_List/ListHeader";
 import MovieDetails from "@/components/ALL_List/MovieDetails";
+import Movies from "@/components/ALL_List/Movies";
 import Trailer from "@/components/ALL_List/Trailer";
 import { Separator } from "@/components/MovieSearch/Separator";
 import axios from "axios";
@@ -20,11 +21,12 @@ type datatype = {
   adult: boolean;
   vote_average: number;
   vote_count: number;
-  genres:genres[]
+  genres: genres[];
+  runtime: number;
 };
 type genres = {
-  id:string
-}
+  id: string;
+};
 const page = ({
   voteAverage,
   className,
@@ -55,7 +57,9 @@ const page = ({
               <div className="flex">
                 <p className="text-black text-[18px]">{`${
                   data?.release_date
-                } · ${data?.adult === false ? "PG" : "R+18"} · ${"2h 40m"}`}</p>
+                } · ${data?.adult === true ? "NC-17" : "G"} · ${Math.floor(
+                  (data?.runtime as number) / 60
+                )}h · ${(data?.runtime as number) % 60}m`}</p>
               </div>
             </div>
             <div className="flex gap-2 flex-col">
@@ -70,9 +74,8 @@ const page = ({
                           `text-[#09090B] text-[18px] font-[600] ` + className
                         }
                       >
-                        {data?.vote_average
-                          && (Math.round(data?.vote_average * 10) / 10).toFixed(1)                                                      
-                          }
+                        {data?.vote_average &&
+                          (Math.round(data?.vote_average * 10) / 10).toFixed(1)}
                       </h3>
                       <h3 className="text-[#71717A] text-[16px] font-[400] ">
                         /10
@@ -90,7 +93,7 @@ const page = ({
               </div>
             </div>
           </div>
-          <div className="flex gap-8">
+          <div className="flex justify-center items-center gap-8">
             <Image
               className="rounded-sm"
               src={`https://image.tmdb.org/t/p/original${
@@ -100,23 +103,27 @@ const page = ({
               width={290}
               height={428}
             />
-            <Trailer/>
+            <Trailer />
           </div>
         </div>
         <div className="flex gap-5 pt-[32px] flex-col">
           <div className="flex h-[20px] flex-wrap gap-3">
             {data?.genres.map((value: any, index: any) => (
-              <button key={index} className="bg-white border border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit">{value.name}</button>
+              <button
+                key={index}
+                className="bg-white border border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit"
+              >
+                {value.name}
+              </button>
             ))}
           </div>
           <p className="text-[16px] text-black">{data?.overview}</p>
           <MovieDetails />
         </div>
         <div className="flex pb-[113px] pt-[32px]">
-          <div className="flex flex-col gap-8">
-            <ListHeader ListName="More Like this" />
-          </div>
+          <div className="flex flex-col gap-8"></div>
         </div>
+        <Movies d />
       </div>
     </div>
   );

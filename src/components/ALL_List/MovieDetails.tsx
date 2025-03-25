@@ -4,7 +4,7 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { strict } from "assert";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 type datatype = {
   overview: string;
   job: string;
@@ -32,46 +32,47 @@ const MovieDetails = () => {
       )
       .then((response) => setData(response.data));
   }, []);
-
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex gap-[53px] ">
-        <h1 className="text-[17px] w-[67px] font-[700]">Director</h1>
-        {data?.crew.map((value, index) => {
-          return (
-            value.known_for_department &&
-            value.department === "Writing" && (
-              <h1 className="text-[16px]" key={index}>
-                {value.name}
-              </h1>
-            )
-          );
-        })}
+    <Suspense>
+      <div className="flex flex-col gap-5">
+        <div className="flex gap-[53px] ">
+          <h1 className="text-[17px] w-[67px] font-[700]">Director</h1>
+          {data?.crew.map((value, index) => {
+            return (
+              value.known_for_department &&
+              value.department === "Writing" && (
+                <h1 className="text-[16px]" key={index}>
+                  {value.name}
+                </h1>
+              )
+            );
+          })}
+        </div>
+        <Separator />
+        <div className="flex gap-[53px]">
+          <h1 className="text-[17px]  w-[67px] font-[700]">Writers</h1>
+          {data?.crew.map((value, index) => {
+            return (
+              value.job === "Director" && (
+                <h1 className="text-[16px]" key={index}>
+                  {value.name}
+                </h1>
+              )
+            );
+          })}
+        </div>
+        <Separator />
+        <div className="flex gap-[53px]">
+          <h1 className="text-[17px]  w-[67px] font-[700]">Stars</h1>
+          {data?.cast.slice(0, 3).map((value, index) => (
+            <h1 key={index} className="text-[16px]">
+              {value.name}
+            </h1>
+          ))}
+        </div>
+        <Separator />
       </div>
-      <Separator />
-      <div className="flex gap-[53px]">
-        <h1 className="text-[17px]  w-[67px] font-[700]">Writers</h1>
-        {data?.crew.map((value, index) => {
-          return (
-            value.job === "Director" && (
-              <h1 className="text-[16px]" key={index}>
-                {value.name}
-              </h1>
-            )
-          );
-        })}
-      </div>
-      <Separator />
-      <div className="flex gap-[53px]">
-        <h1 className="text-[17px]  w-[67px] font-[700]">Stars</h1>
-        {data?.cast.slice(0, 3).map((value, index) => (
-          <h1 key={index} className="text-[16px]">
-            {value.name}
-          </h1>
-        ))}
-      </div>
-      <Separator />
-    </div>
+    </Suspense>
   );
 };
 export default MovieDetails;

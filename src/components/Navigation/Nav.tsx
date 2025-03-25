@@ -1,8 +1,11 @@
+"use client";
 import React from "react";
 import { Dropdown } from "./Dropdown";
 import { InputSearch } from "./InputSearch";
 import { Film, Moon } from "lucide-react";
-export const Nav = () => {
+import { useRouter } from "next/navigation";
+export const Nav = ({ HandleOnClick }: { HandleOnClick?: any }) => {
+  const router = useRouter();
   return (
     <nav className="w-full h-full px-[80px] py-[11.5px]">
       <div className="bg-white w-full justify-around flex">

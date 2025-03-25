@@ -1,39 +1,25 @@
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import { VoteAverage } from "./VoteAverage";
 import axios from "axios";
-import { Button } from "../ui/button";
-import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const TopRatedData = ({
-  className,
-  ListName,
-}: {
-  className?: string;
-  ListName?: string;
-}) => {
-  const [topRated, setTopRated] = useState([{}]);
+const Movies = ({ datatype }: { datatype: string }) => {
+  const [Data, setData] = useState([{}]);
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+        `https://api.themoviedb.org/3/movie/${datatype}?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
-      .then((response) => setTopRated(response.data.results));
+      .then((response) => setData(response.data.results));
   }, []);
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`details/${id}`);
   };
   return (
-    <div className="gap-[32px] w-full justify-between flex px-[80px] flex-wrap">
-      <div className={`flex w-full justify-between ` + className}>
-        <h1 className="font-[600] text-[24px]">{ListName}</h1>
-        <Button className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] border-none font-[500] text-[#18181B] text-[14px]">
-          See more <ArrowRight className="text-black hover:bg-none" />
-        </Button>
-      </div>
-      {topRated?.slice(0, 10).map((value: any, i: any) => (
+    <>
+      {Data?.slice(0, 10).map((value: any, i: any) => (
         <div
           onClick={() => HandleOnClick(value.id)}
           key={i}
@@ -56,8 +42,7 @@ const TopRatedData = ({
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 };
-
-export default TopRatedData;
+export default Movies;
