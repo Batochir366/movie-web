@@ -4,15 +4,14 @@ export const DescriptionBox = ({
   original_title,
   vote_average,
   overview,
- 
 }: {
   original_title: string;
   vote_average: string;
   overview: string;
 }) => {
   return (
-    <div className="flex absolute w-full pt-[178px] pl-[140px]">
-      <div className="flex absolute items-start z-10 gap-4 flex-col">
+    <div className="flex w-full pt-[178px] pl-[140px]">
+      <div className="flex items-start gap-4 flex-col">
         <header className="flex flex-col">
           <h3 className="text-[16px] text-white">Now Playing:</h3>
           <h1 className="text-[36px] text-white font-[700]">
@@ -20,9 +19,10 @@ export const DescriptionBox = ({
           </h1>
           <VoteAverage className="text-[#FAFAFA]" voteAverage={vote_average} />
         </header>
-        <p className="w-[500px] text-[14px] border-black text-[#FAFAFA] h-fit">{overview}</p>
+        <p className="w-[500px] text-[14px] border-black text-[#FAFAFA] h-fit">
+          {overview}
+        </p>
       </div>
     </div>
   );
 };
-;
