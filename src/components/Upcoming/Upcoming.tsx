@@ -31,8 +31,8 @@ type results = {
 };
 export const Upcoming = () => {
   const [upcomingData, setUpcomingData] = useState<datatype>();
-  const [data, setData] = useState<datatype>();
   const [id, setId] = useState<string>();
+  const [data, setData] = useState<datatype>();
   useEffect(() => {
     axios
       .get(
@@ -71,18 +71,20 @@ export const Upcoming = () => {
                     <DialogHeader>
                       <DialogTitle></DialogTitle>
                       <DialogDescription className="w-[760px] h-[428px]">
-                        <iframe
-                          key={index}
-                          className="flex relative w-[760px] h-[450px] bg-no-repeat rounded-sm"
-                          width={997}
-                          height={561}
-                          src={`https://www.youtube.com/embed/${data?.results[2].key}?si=bB_vz5nDlE-bwi2u`}
-                          title="YouTube video player"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                        />
+                        {data?.results.slice(0,1).map((TrailerValue: any, index: any) => (
+                          <iframe
+                            key={index}
+                            className="flex relative w-[760px] h-[450px] bg-no-repeat rounded-sm"
+                            width={997}
+                            height={561}
+                            src={`https://www.youtube.com/embed/${TrailerValue.key}?si=bB_vz5nDlE-bwi2u`}
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                          />
+                        ))}
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>
@@ -93,7 +95,9 @@ export const Upcoming = () => {
               className="w-screen brightness-80 absolute h-[600px]"
               height={600}
               width={1440}
-              src={`https://image.tmdb.org/t/p/original${value.backdrop_path}`}
+              src={`https://image.tmdb.org/t/p/original${
+                value.backdrop_path || value.poster_path
+              }`}
               alt="poster"
             />
           </CarouselItem>

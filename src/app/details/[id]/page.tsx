@@ -1,15 +1,13 @@
 "use client";
 
-import { ListHeader } from "@/components/ALL_List/ListHeader";
 import MovieDetails from "@/components/ALL_List/MovieDetails";
-import Movies from "@/components/ALL_List/Movies";
 import Trailer from "@/components/ALL_List/Trailer";
-import { Separator } from "@/components/MovieSearch/Separator";
+import { VoteAverage } from "@/components/ALL_List/VoteAverage";
 import axios from "axios";
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { log } from "node:console";
+import { useParams, useRouter } from "next/navigation";
+import Router from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 type datatype = {
@@ -23,6 +21,7 @@ type datatype = {
   vote_count: number;
   genres: genres[];
   runtime: number;
+  results:[]
 };
 type genres = {
   id: string;
@@ -36,17 +35,28 @@ const page = ({
   className: string;
 }) => {
   const [data, setData] = useState<datatype>();
-  const id = useParams();
+  const [similarMovieData, setSimilarMovieData] = useState<datatype>();
+  const {id} = useParams();
   
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${id}?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+      )
+      .then((response) => setData(response.data));
+  }, []);
 
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id.id}?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+        `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`
       )
-      .then((response) => setData(response.data));
-  }, []);
-  console.log(data?.genres[0]?.id);
+      .then((response) => setSimilarMovieData(response.data.results));
+  }, [id]);
+  const router = useRouter()
+  const HandleOnClick = (id: string) => {
+    router.push(`details/${id}`);
+  };
   return (
     <div className="w-fit h-fit bg-white">
       <div className="flex flex-col px-[178px] bg-white">
@@ -125,7 +135,31 @@ const page = ({
         <div className="flex pb-[113px] pt-[32px]">
           <div className="flex flex-col gap-8"></div>
         </div>
-       
+        <div className="flex pt-[20px]">
+             {similarMovieData?.results.slice(0, 5).map((value: any, i: any) => (
+               <div
+                 onClick={() => HandleOnClick(value.id)}
+                 key={i}
+                 className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]"
+               >
+                 <Image
+                   className="w-[230px] h-[340px] rounded-t-[8px] "
+                   height={340}
+                   width={230}
+                   src={`https://image.tmdb.org/t/p/original${
+                     value.poster_path || value.backdrop_path
+                   }`}
+                   alt="poster"
+                 />
+                 <div className="flex flex-col p-2 gap-[3px]">
+                   <VoteAverage voteAverage={value.vote_average} />
+                   <p className="text-[12px] text-[#09090b] w-[214px] h-fit">
+                     {value.title}
+                   </p>
+                 </div>
+               </div>
+             ))}
+           </div>
       </div>
     </div>
   );
