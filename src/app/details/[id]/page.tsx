@@ -1,5 +1,6 @@
 "use client";
 
+import { ListHeader } from "@/components/ALL_List/ListHeader";
 import MovieDetails from "@/components/ALL_List/MovieDetails";
 import Trailer from "@/components/ALL_List/Trailer";
 import { VoteAverage } from "@/components/ALL_List/VoteAverage";
@@ -21,11 +22,11 @@ type datatype = {
   vote_count: number;
   genres: genres[];
   runtime: number;
-  results:[]
+  results: [];
 };
 type genres = {
   id: string;
-  name:string
+  name: string;
 };
 const page = ({
   voteAverage,
@@ -36,8 +37,8 @@ const page = ({
 }) => {
   const [data, setData] = useState<datatype>();
   const [similarMovieData, setSimilarMovieData] = useState<datatype>();
-  const {id} = useParams();
-  
+  const { id } = useParams();
+
   useEffect(() => {
     axios
       .get(
@@ -49,13 +50,14 @@ const page = ({
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`
+        `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
-      .then((response) => setSimilarMovieData(response.data.results));
-  }, [id]);
-  const router = useRouter()
+      .then((response) => setSimilarMovieData(response.data));
+  }, []);
+
+  const router = useRouter();
   const HandleOnClick = (id: string) => {
-    router.push(`details/${id}`);
+    router.push(`${id}`);
   };
   return (
     <div className="w-fit h-fit bg-white">
@@ -94,9 +96,8 @@ const page = ({
                       </h3>
                     </div>
                     <p className="text-[#71717A] text-[12px]">
-                      {data?.vote_count
-                        ? (data?.vote_count - (data?.vote_count % 1000)) / 1000
-                        : null}
+                      {data?.vote_count &&
+                        (data?.vote_count - (data?.vote_count % 1000)) / 1000}
                       k
                     </p>
                   </div>
@@ -129,37 +130,35 @@ const page = ({
               </button>
             ))}
           </div>
-          <p className="text-[16px] text-black">{data?.overview}</p>
+          <p className="text-[16px] w-full text-black">{data?.overview}</p>
           <MovieDetails />
         </div>
-        <div className="flex pb-[113px] pt-[32px]">
-          <div className="flex flex-col gap-8"></div>
+        <div className="gap-[32px] w-full flex flex-wrap">
+          <ListHeader ListName="More like this" />
+          {similarMovieData?.results.slice(0, 5).map((value: any, i: any) => (
+            <div
+              onClick={() => HandleOnClick(value.id)}
+              key={i}
+              className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]"
+            >
+              <Image
+                className="w-[230px] h-[340px] rounded-t-[8px] "
+                height={340}
+                width={230}
+                src={`https://image.tmdb.org/t/p/original${
+                  value.poster_path || value.backdrop_path
+                }`}
+                alt="poster"
+              />
+              <div className="flex flex-col p-2 gap-[3px]">
+                <VoteAverage voteAverage={value.vote_average} />
+                <p className="text-[12px] text-[#09090b] w-[214px] h-fit">
+                  {value.title}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="flex pt-[20px]">
-             {similarMovieData?.results.slice(0, 5).map((value: any, i: any) => (
-               <div
-                 onClick={() => HandleOnClick(value.id)}
-                 key={i}
-                 className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]"
-               >
-                 <Image
-                   className="w-[230px] h-[340px] rounded-t-[8px] "
-                   height={340}
-                   width={230}
-                   src={`https://image.tmdb.org/t/p/original${
-                     value.poster_path || value.backdrop_path
-                   }`}
-                   alt="poster"
-                 />
-                 <div className="flex flex-col p-2 gap-[3px]">
-                   <VoteAverage voteAverage={value.vote_average} />
-                   <p className="text-[12px] text-[#09090b] w-[214px] h-fit">
-                     {value.title}
-                   </p>
-                 </div>
-               </div>
-             ))}
-           </div>
       </div>
     </div>
   );

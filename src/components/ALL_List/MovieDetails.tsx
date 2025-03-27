@@ -1,10 +1,10 @@
 "use client";
 
-import { Separator } from "@radix-ui/react-dropdown-menu";
 import { strict } from "assert";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
+import { Separator } from "../MovieSearch/Separator";
 type datatype = {
   overview: string;
   job: string;
@@ -22,12 +22,12 @@ type crew = {
 };
 const MovieDetails = () => {
   const [data, setData] = useState<datatype>();
-  const id = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id.id}/credits?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+        `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
       .then((response) => setData(response.data));
   }, []);
@@ -62,7 +62,7 @@ const MovieDetails = () => {
         </div>
         <Separator />
         <div className="flex gap-[53px]">
-          <h1 className="text-[17px]  w-[67px] font-[700]">Stars</h1>
+          <h1 className="text-[17px] w-[67px] font-[700]">Stars</h1>
           {data?.cast.slice(0, 3).map((value, index) => (
             <h1 key={index} className="text-[16px]">
               {value.name}

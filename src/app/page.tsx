@@ -4,7 +4,6 @@ import { Upcoming } from "@/components/Upcoming";
 import { useState } from "react";
 
 export default function Home() {
-  const [count, setData] = useState(0);
   return (
     <div className="flex w-screen h-fit flex-col scroll-auto">
       <Upcoming />
