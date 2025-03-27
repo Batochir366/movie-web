@@ -5,6 +5,7 @@ import { InputSearch } from "./InputSearch";
 import { Film, Moon } from "lucide-react";
 import axios from "axios";
 import { MovieSearchResult } from "../MovieSearch/MovieSearchResult";
+import { useRouter } from "next/navigation";
 type results = {
   results: [];
 };
@@ -25,6 +26,10 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
   console.log(inputValue);
 
   console.log(data, `dataaa`);
+  const router = useRouter();
+  const HandleDetails = (id: string) => {
+    router.push(`details/${id}`);
+  };
   return (
     <nav className="w-full h-full px-[80px] py-[11.5px]">
       <div className="bg-white w-full justify-around flex">
@@ -39,19 +44,31 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
           <div className="flex gap-[4.5px] flex-col">
             <InputSearch HandleOnChange={HandleInputValue} />
             <div>
-              <div className="bg-white w-fit h-fit absolute z-20 border-[#E4E4E7] rounded-lg border border-solid p-3">
-                {data?.results.slice(0, 5).map((value: any, index: any) => (
-                  <MovieSearchResult
+              {data?.results.map((value: any, i: any) => (
+                <div
+                onClick={()=>HandleDetails(value.id)}
+                  key={i}
+                  className="bg-white w-fit h-fit absolute z-20 border-[#E4E4E7] rounded-lg border border-solid p-3"
+                >
+                  {data?.results.slice(0, 5).map((value: any, index: any) => (
+                    <MovieSearchResult
                     key={index}
-                    src={`https://image.tmdb.org/t/p/original${
-                      value.backdrop_path || value.poster_path
-                    }`}
-                    voteAverage={value.vote_average}
-                    release_date={value.release_date.slice(0, 4)}
-                    original_title={value.original_title}
-                  />
-                ))}
-              </div>
+                      src={`https://image.tmdb.org/t/p/original${
+                        value.poster_path || value.backdrop_path
+                      }`}
+                      voteAverage={value.vote_average}
+                      release_date={
+                        value.release_date.slice(0, 4) ||
+                        "release date not found😿"
+                      }
+                      original_title={value.original_title}
+                    />
+                  ))}
+                  <div className="flex px-4 py-2">
+                    <p className="text-[14px] font-[500]">{`See all results for "${inputValue}"`}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
