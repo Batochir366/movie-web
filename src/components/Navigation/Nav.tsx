@@ -28,7 +28,7 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
   console.log(data, `dataaa`);
   const router = useRouter();
   const HandleDetails = (id: string) => {
-    router.push(`details/${id}`);
+    router.push(`/details/${id}`);
   };
   return (
     <nav className="w-full h-full px-[80px] py-[11.5px]">
@@ -46,13 +46,13 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
             <div>
               {data?.results.map((value: any, i: any) => (
                 <div
-                onClick={()=>HandleDetails(value.id)}
+                  onClick={() => HandleDetails(value.id)}
                   key={i}
                   className="bg-white w-fit h-fit absolute z-20 border-[#E4E4E7] rounded-lg border border-solid p-3"
                 >
-                  {data?.results.slice(0, 5).map((value: any, index: any) => (
+                  {data?.results.slice(0, 5).map((value: any, i: any) => (
                     <MovieSearchResult
-                    key={index}
+                      key={i}
                       src={`https://image.tmdb.org/t/p/original${
                         value.poster_path || value.backdrop_path
                       }`}

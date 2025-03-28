@@ -45,7 +45,7 @@ const page = ({
         `https://api.themoviedb.org/3/movie/${id}?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
       .then((response) => setData(response.data));
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     axios
@@ -53,11 +53,11 @@ const page = ({
         `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
       .then((response) => setSimilarMovieData(response.data));
-  }, []);
+  }, [id]);
 
   const router = useRouter();
   const HandleOnClick = (id: string) => {
-    router.push(`${id}`);
+    router.push(`/${id}`);
   };
   return (
     <div className="w-fit h-fit bg-white">
