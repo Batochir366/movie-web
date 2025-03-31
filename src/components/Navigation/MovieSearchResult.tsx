@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { VoteAverage } from "../ALL_List/VoteAverage";
+import { VoteAverage } from "../VoteAverage";
 import Image from "next/image";
-import { Separator } from "./Separator";
+import { Separator } from "../Separator";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 export const MovieSearchResult = ({
   src,
   voteAverage,
   release_date,
   original_title,
+  HandleonClick,
 }: {
   src?: any;
   voteAverage?: string;
   release_date?: string;
   original_title?: any;
+  HandleonClick: () => void;
 }) => {
   return (
-    <div className="bg-white flex rounded-md z-20 flex-col h-fit w-fit p-2">
+    <div
+      onClick={HandleonClick}
+      className="bg-white flex rounded-md z-20 flex-col h-fit w-fit p-2"
+    >
       <div className="flex gap-4">
         <Image
-          className="rounded-md w-[67px] h-[100px] border-black border"
+          className="rounded-md w-[67px] text-[14px] h-[100px] border-black border"
           src={src}
           alt="image not found"
           width={67}

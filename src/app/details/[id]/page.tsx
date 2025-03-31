@@ -1,15 +1,13 @@
 "use client";
-
-import { ListHeader } from "@/components/ALL_List/ListHeader";
-import MovieDetails from "@/components/ALL_List/MovieDetails";
-import Trailer from "@/components/ALL_List/Trailer";
-import { VoteAverage } from "@/components/ALL_List/VoteAverage";
-import axios from "axios";
-import { Star } from "lucide-react";
+import MovieDetails from "@/components/MovieDetails";
+import Trailer from "@/components/Trailer";
+import { axiosInstance } from "@/lib/utils";
+import { ArrowRight, Star } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import Router from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { VoteAverage } from "@/components/VoteAverage";
+import { Button } from "@/components/ui/button";
 
 type datatype = {
   original_title: string;
@@ -28,36 +26,23 @@ type genres = {
   id: string;
   name: string;
 };
-const page = ({
-  voteAverage,
-  className,
-}: {
-  voteAverage: string;
-  className: string;
-}) => {
+const page = ({ className }: { voteAverage: string; className: string }) => {
   const [data, setData] = useState<datatype>();
   const [similarMovieData, setSimilarMovieData] = useState<datatype>();
   const { id } = useParams();
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${id}?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
+    axiosInstance
+      .get(`movie/${id}?language=en-US`)
       .then((response) => setData(response.data));
-  }, [id]);
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
+    axiosInstance
+      .get(`movie/${id}/similar?language=en-US&page=1`)
       .then((response) => setSimilarMovieData(response.data));
   }, [id]);
 
   const router = useRouter();
   const HandleOnClick = (id: string) => {
-    router.push(`/${id}`);
+    router.push(`/details/${id}`);
   };
   return (
     <div className="w-fit h-fit bg-white">
@@ -134,8 +119,13 @@ const page = ({
           <MovieDetails />
         </div>
         <div className="gap-[32px] w-full flex flex-wrap">
-          <ListHeader ListName="More like this" />
-          {similarMovieData?.results.slice(0, 5).map((value: any, i: any) => (
+          <div className={`flex w-full justify-between `}>
+            <h1 className="font-[600] text-[24px]">More Like This</h1>
+            <Button className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] border-none font-[500] text-[#18181B] text-[14px]">
+              See more <ArrowRight className="text-black hover:bg-none" />
+            </Button>
+          </div>
+          {similarMovieData?.results.slice(0, 7).map((value: any, i: any) => (
             <div
               onClick={() => HandleOnClick(value.id)}
               key={i}

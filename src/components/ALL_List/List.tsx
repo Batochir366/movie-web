@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
-import Movies from "./Movies";
+import Movies from "../Movies";
 
 export const List = () => {
   return (

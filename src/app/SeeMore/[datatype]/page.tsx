@@ -1,9 +1,8 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { VoteAverage } from "@/components/ALL_List/VoteAverage";
+import { VoteAverage } from "@/components/VoteAverage";
 import {
   Pagination,
   PaginationContent,
@@ -13,15 +12,26 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { axiosInstance } from "@/lib/utils";
+type datatype = {
+  total_pages: number | undefined;
+  results: results[];
+};
+type results = {
+  poster_path: string;
+  backdrop_path: string;
+  vote_average: number;
+};
 const Movies = () => {
-  const [Data, setData] = useState([{}]);
+  const [Data, setData] = useState<datatype>();
+  const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${datatype}?language=en-US&page=2&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
-      .then((response) => setData(response.data.results));
-  }, []);
+    axiosInstance
+      .get(`movie/${datatype}?language=en-US&page=${currentPage}`)
+      .then((response) => setData(response.data));
+  }, [currentPage]);
+  console.log(Data, "data");
+
   const { datatype } = useParams();
   const router = useRouter();
   const HandleOnClick = (id: string) => {
@@ -29,9 +39,10 @@ const Movies = () => {
   };
   return (
     <div className="flex flex-col">
+      <h1 className="font-[600] flex px-[80px] text-[24px]">{datatype}</h1>
       <div className="flex flex-col w-full pt-[52px] gap-[52px]">
         <div className="gap-[32px] w-full justify-between overflow-scroll flex px-[80px] flex-wrap">
-          {Data?.map((value: any, i: any) => (
+          {Data?.results.slice(0, 10).map((value: any, i: any) => (
             <div key={i}>
               <div
                 onClick={() => HandleOnClick(value.id)}
@@ -59,17 +70,39 @@ const Movies = () => {
       </div>
       <Pagination>
         <PaginationContent>
+          {currentPage !== 1 && (
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => setCurrentPage(currentPage - 1)}
+              />
+            </PaginationItem>
+          )}
+          {currentPage == 3 && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
+          {currentPage !== 1 && (
+            <PaginationItem>
+              <PaginationLink>{currentPage - 1}</PaginationLink>
+            </PaginationItem>
+          )}
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <PaginationLink isActive={currentPage == currentPage}>
+              {currentPage}
+            </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
+            <PaginationLink>{currentPage + 1}</PaginationLink>
           </PaginationItem>
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href="#" />
+            <PaginationLink>{Data?.total_pages}</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext onClick={() => setCurrentPage(currentPage + 1)} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

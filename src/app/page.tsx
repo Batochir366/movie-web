@@ -1,7 +1,6 @@
 "use client";
 import { List } from "@/components/ALL_List/List";
 import { Upcoming } from "@/components/Upcoming";
-import { useState } from "react";
 
 export default function Home() {
   return (

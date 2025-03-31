@@ -4,8 +4,9 @@ import React, { useEffect, useState } from "react";
 import { VoteAverage } from "./VoteAverage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+import { axiosInstance } from "@/lib/utils";
 
 const Movies = ({
   datatype,
@@ -16,10 +17,8 @@ const Movies = ({
 }) => {
   const [Data, setData] = useState([{}]);
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${datatype}?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
+    axiosInstance
+      .get(`movie/${datatype}?language=en-US&page=1`)
       .then((response) => setData(response.data.results));
   }, []);
   const router = useRouter();
@@ -48,7 +47,7 @@ const Movies = ({
               className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]"
             >
               <Image
-                className="w-[230px] h-[340px] rounded-t-[8px] "
+                className="w-[230px] hover:brightness-70 h-[340px] rounded-t-[8px] "
                 height={340}
                 width={230}
                 src={`https://image.tmdb.org/t/p/original${

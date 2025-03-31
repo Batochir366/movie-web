@@ -1,10 +1,7 @@
-"use client";
-
-import { strict } from "assert";
-import axios from "axios";
 import { useParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
-import { Separator } from "../MovieSearch/Separator";
+import { Separator } from "./Separator";
+import { axiosInstance } from "@/lib/utils";
 type datatype = {
   overview: string;
   job: string;
@@ -25,10 +22,8 @@ const MovieDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
+    axiosInstance
+      .get(`movie/${id}/credits?language=en-US`)
       .then((response) => setData(response.data));
   }, []);
   return (
@@ -38,8 +33,7 @@ const MovieDetails = () => {
           <h1 className="text-[17px] w-[67px] font-[700]">Director</h1>
           {data?.crew.map((value, index) => {
             return (
-              value.known_for_department &&
-              value.department === "Writing" && (
+              value.job === "Director" && (
                 <h1 className="text-[16px]" key={index}>
                   {value.name}
                 </h1>
@@ -52,7 +46,8 @@ const MovieDetails = () => {
           <h1 className="text-[17px]  w-[67px] font-[700]">Writers</h1>
           {data?.crew.map((value, index) => {
             return (
-              value.job === "Director" && (
+              value.known_for_department &&
+              value.department === "Writing" && (
                 <h1 className="text-[16px]" key={index}>
                   {value.name}
                 </h1>

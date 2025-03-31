@@ -21,6 +21,7 @@ import axios from "axios";
 import { PlayIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { log } from "console";
+import { axiosInstance } from "@/lib/utils";
 type datatype = {
   results: results[];
   id: Number;
@@ -34,23 +35,18 @@ export const Upcoming = () => {
   const [id, setId] = useState<string>("278");
   const [data, setData] = useState<datatype>();
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
+    axiosInstance
+      .get(`movie/now_playing?language=en-US&page=1`)
       .then((res) => setUpcomingData(res.data));
-  }, []);
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
+    axiosInstance
+      .get(`movie/${id}/videos?language=en-US`)
       .then((response) => setData(response.data));
   }, [id]);
+
   return (
     <Carousel className="w-full h-[600px]">
       <CarouselContent className="w-full h-[600px]">
-        {upcomingData?.results.slice(0, 4).map((value: any, index: number) => (
+        {upcomingData?.results.slice(0, 3).map((value: any, index: number) => (
           <CarouselItem key={index} className="w-full relative h-[600px]">
             <div className="flex flex-col gap-4 absolute z-20">
               <DescriptionBox
@@ -71,20 +67,22 @@ export const Upcoming = () => {
                     <DialogHeader>
                       <DialogTitle></DialogTitle>
                       <DialogDescription className="w-[760px] h-[428px]">
-                        {data?.results.slice(0,1).map((TrailerValue: any, index: any) => (
-                          <iframe
-                            key={index}
-                            className="flex relative w-[760px] h-[450px] bg-no-repeat rounded-sm"
-                            width={997}
-                            height={561}
-                            src={`https://www.youtube.com/embed/${TrailerValue.key}?si=bB_vz5nDlE-bwi2u`}
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                          />
-                        ))}
+                        {data?.results
+                          .slice(0, 1)
+                          .map((TrailerValue: any, index: any) => (
+                            <iframe
+                              key={index}
+                              className="flex relative w-[760px] h-[450px] bg-no-repeat rounded-sm"
+                              width={997}
+                              height={561}
+                              src={`https://www.youtube.com/embed/${TrailerValue.key}?si=bB_vz5nDlE-bwi2u`}
+                              title="YouTube video player"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              referrerPolicy="strict-origin-when-cross-origin"
+                              allowFullScreen
+                            />
+                          ))}
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>

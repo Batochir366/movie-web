@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { VoteAverage } from "../ALL_List/VoteAverage";
+import { VoteAverage } from "../VoteAverage";
 export const DescriptionBox = ({
   original_title,
   vote_average,
