@@ -1,4 +1,5 @@
 "use client";
+
 import MovieDetails from "@/components/MovieDetails";
 import Trailer from "@/components/Trailer";
 import { axiosInstance } from "@/lib/utils";
@@ -29,7 +30,7 @@ type genres = {
 const page = ({ className }: { voteAverage: string; className: string }) => {
   const [data, setData] = useState<datatype>();
   const [similarMovieData, setSimilarMovieData] = useState<datatype>();
-  const { id } = useParams();
+  const { id }:{id:string} = useParams();
 
   useEffect(() => {
     axiosInstance
@@ -43,6 +44,9 @@ const page = ({ className }: { voteAverage: string; className: string }) => {
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);
+  };
+  const HandleSeeMore = (id: string) => {
+    router.push(`/MoreLikeThis/${id}`);
   };
   return (
     <div className="w-fit h-fit bg-white">
@@ -121,7 +125,10 @@ const page = ({ className }: { voteAverage: string; className: string }) => {
         <div className="gap-[32px] w-full flex flex-wrap">
           <div className={`flex w-full justify-between `}>
             <h1 className="font-[600] text-[24px]">More Like This</h1>
-            <Button className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] border-none font-[500] text-[#18181B] text-[14px]">
+            <Button
+              onClick={() => HandleSeeMore(id)}
+              className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] border-none font-[500] text-[#18181B] text-[14px]"
+            >
               See more <ArrowRight className="text-black hover:bg-none" />
             </Button>
           </div>

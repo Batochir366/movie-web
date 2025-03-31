@@ -25,25 +25,24 @@ type results = {
 const Movies = () => {
   const [Data, setData] = useState<datatype>();
   const [currentPage, setCurrentPage] = useState(1);
-  const { datatype } = useParams();
   useEffect(() => {
     axiosInstance
-      .get(`movie/${datatype}?language=en-US&page=${currentPage}`)
+      .get(`movie/${id}/similar?language=en-US&page=${currentPage}`)
       .then((response) => setData(response.data));
   }, [currentPage]);
   console.log(Data, "data");
 
-  
+  const { id } = useParams();
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);
   };
   return (
     <div className="flex flex-col">
-      <h1 className="font-[600] flex px-[80px] text-[24px]">{datatype}</h1>
+      <h1 className="font-[600] flex px-[80px] text-[24px]">More Like This</h1>
       <div className="flex flex-col w-full pt-[52px] gap-[52px]">
         <div className="gap-[32px] w-full justify-between overflow-scroll flex px-[80px] flex-wrap">
-          {Data?.results?.slice(0, 10).map((value: any, i: any) => (
+          {Data?.results.slice(0, 10).map((value: any, i: any) => (
             <div key={i}>
               <div
                 onClick={() => HandleOnClick(value.id)}
