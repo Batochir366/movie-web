@@ -33,7 +33,6 @@ const Movies = () => {
   }, [currentPage]);
   console.log(Data, "data");
 
-  
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);
@@ -73,14 +72,12 @@ const Movies = () => {
         <PaginationContent>
           {currentPage !== 1 && (
             <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setCurrentPage(currentPage - 1)}
-              />
+              <PaginationPrevious href={`?page=${currentPage - 1}`} />
             </PaginationItem>
           )}
           {currentPage > 4 && (
             <PaginationItem>
-              <PaginationLink>1</PaginationLink>
+              <PaginationLink href={`?page=1`}>1</PaginationLink>
             </PaginationItem>
           )}
           {currentPage > 4 && (
@@ -90,28 +87,39 @@ const Movies = () => {
           )}
           {currentPage !== 1 && (
             <PaginationItem>
-              <PaginationLink>{currentPage - 1}</PaginationLink>
+              <PaginationLink href={`?page=${currentPage - 1}`}>
+                {currentPage - 1}
+              </PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationLink isActive={currentPage == currentPage}>
+            <PaginationLink
+              href={`?page=${currentPage}`}
+              isActive={currentPage == currentPage}
+            >
               {currentPage}
             </PaginationLink>
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>{currentPage + 1}</PaginationLink>
-          </PaginationItem>
-          {(Data?.total_pages as number) - 5 !== currentPage && (
+          {currentPage < 499 && (
+            <PaginationItem>
+              <PaginationLink href={`?page=${currentPage + 1}`}>
+                {currentPage + 1}
+              </PaginationLink>
+            </PaginationItem>
+          )}
+          {currentPage <= 495 && (
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
           )}
-          <PaginationItem>
-            <PaginationLink>{Data?.total_pages}</PaginationLink>
-          </PaginationItem>
-          {currentPage !== Data?.total_pages && (
+          {currentPage < 496 && (
             <PaginationItem>
-              <PaginationNext onClick={() => setCurrentPage(currentPage + 1)} />
+              <PaginationLink href={`?page=500`}>{500}</PaginationLink>
+            </PaginationItem>
+          )}
+          {currentPage !== 500 && (
+            <PaginationItem>
+              <PaginationNext href={`?page=${currentPage + 1}`} />
             </PaginationItem>
           )}
         </PaginationContent>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Separator } from "../Separator";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const MovieSearchResult = ({
   src,
@@ -17,6 +18,10 @@ export const MovieSearchResult = ({
   original_title?: any;
   HandleonClick: () => void;
 }) => {
+  const router = useRouter();
+  const HandleOnClick = (id: string) => {
+    router.push(`/details/${id}`);
+  };
   return (
     <div
       onClick={HandleonClick}
@@ -41,9 +46,6 @@ export const MovieSearchResult = ({
             <p className="text-black h-fit font-[500] text-[14px]">
               {release_date}
             </p>
-            <Button className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] shadow-none border-none font-[500] text-[#18181B] text-[14px]">
-              See more <ArrowRight className="text-black hover:bg-none" />
-            </Button>
           </div>
         </div>
       </div>

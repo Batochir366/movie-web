@@ -6,8 +6,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "../Separator";
-import axios from "axios";
 import { axiosInstance } from "@/lib/utils";
+import { useParams, useRouter } from "next/navigation";
 type datatype = {
   genres: genres[];
 };
@@ -21,6 +21,11 @@ export const Dropdown = () => {
       .get(`genre/movie/list?language=en`)
       .then((response) => setData(response.data));
   }, []);
+  const router = useRouter();
+  const HandleGenre = (id: string) => {
+    router.push(`/Genres/${id}`);
+    console.log(id, "id");
+  };
   return (
     <div className="bg-white w-fit h-fit rounded-sm">
       <Popover>
@@ -42,6 +47,7 @@ export const Dropdown = () => {
             <div className="flex flex-wrap gap-4">
               {data?.genres.map((value: any, index: any) => (
                 <button
+                  onClick={() => HandleGenre(value.id)}
                   key={index}
                   className="bg-white border cursor-pointer border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit"
                 >

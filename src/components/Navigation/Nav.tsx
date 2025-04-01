@@ -5,7 +5,7 @@ import { InputSearch } from "./InputSearch";
 import { Film, Moon } from "lucide-react";
 import axios from "axios";
 import { MovieSearchResult } from "./MovieSearchResult";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { axiosInstance } from "@/lib/utils";
 type results = {
   results: [];
@@ -15,14 +15,12 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
   const HandleInputValue = (event: any) => {
     setInputValue(event.target.value);
   };
-
   const [data, setData] = useState<results>();
   useEffect(() => {
     axiosInstance
       .get(`search/movie?query=${inputValue}&language=en-US&page=1`)
       .then((response) => setData(response.data));
   }, [inputValue]);
-  console.log(inputValue);
 
   console.log(data, `dataaa`);
   const router = useRouter();
@@ -30,10 +28,21 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
     router.push(`/details/${id}`);
     setInputValue("");
   };
+  const HandleHome = () => {
+    router.push("/");
+    console.log("working");
+  };
+  const HandleResults = (inputValue: string) => {
+    router.push(`/SeeAllResults?search=${inputValue}&page=1`);
+    setInputValue("");
+  };
   return (
     <nav className="w-full h-full px-[80px] py-[11.5px]">
       <div className="w-full justify-around flex">
-        <div className="flex gap-2 items-center justify-center">
+        <div
+          onClick={HandleHome}
+          className="flex cursor-pointer gap-2 items-center justify-center"
+        >
           <Film className="text-indigo-700 size-[20px]" />
           <h1 className="text-[16px] italic text-indigo-700 font-[700]">
             Movie Z
@@ -61,9 +70,12 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
                       original_title={value.original_title}
                     />
                   ))}
-                  <div className="flex px-4 py-2">
+                  <button
+                    onClick={() => HandleResults(inputValue)}
+                    className="flex cursor-pointer px-4 py-2"
+                  >
                     <p className="text-[14px] font-[500]">{`See all results for "${inputValue}"`}</p>
-                  </div>
+                  </button>
                 </div>
               )}
             </div>

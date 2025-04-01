@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { VoteAverage } from "@/components/VoteAverage";
 import {
   Pagination,
@@ -23,26 +23,29 @@ type results = {
   vote_average: number;
 };
 const Movies = () => {
+  const { id } = useParams();
   const [Data, setData] = useState<datatype>();
-  const [currentPage, setCurrentPage] = useState(1);
+  const params = useSearchParams();
+  const page = params.get("page");
+  const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
+
   useEffect(() => {
     axiosInstance
       .get(`movie/${id}/similar?language=en-US&page=${currentPage}`)
       .then((response) => setData(response.data));
   }, [currentPage]);
-  console.log(Data, "data");
 
-  const { id } = useParams();
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);
   };
+
   return (
     <div className="flex flex-col">
       <h1 className="font-[600] flex px-[80px] text-[24px]">More Like This</h1>
       <div className="flex flex-col w-full pt-[52px] gap-[52px]">
         <div className="gap-[32px] w-full justify-between overflow-scroll flex px-[80px] flex-wrap">
-          {Data?.results.slice(0, 10).map((value: any, i: any) => (
+          {Data?.results.slice(0, 10).map((value: any, i: number) => (
             <div key={i}>
               <div
                 onClick={() => HandleOnClick(value.id)}
@@ -72,14 +75,12 @@ const Movies = () => {
         <PaginationContent>
           {currentPage !== 1 && (
             <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setCurrentPage(currentPage - 1)}
-              />
+              <PaginationPrevious href={`?page=${currentPage - 1}`} />
             </PaginationItem>
           )}
           {currentPage > 4 && (
             <PaginationItem>
-              <PaginationLink>1</PaginationLink>
+              <PaginationLink href={`?page=1`}>1</PaginationLink>
             </PaginationItem>
           )}
           {currentPage > 4 && (
@@ -89,28 +90,39 @@ const Movies = () => {
           )}
           {currentPage !== 1 && (
             <PaginationItem>
-              <PaginationLink>{currentPage - 1}</PaginationLink>
+              <PaginationLink href={`?page=${currentPage - 1}`}>
+                {currentPage - 1}
+              </PaginationLink>
             </PaginationItem>
           )}
           <PaginationItem>
-            <PaginationLink isActive={currentPage == currentPage}>
+            <PaginationLink
+              href={`?page=${currentPage}`}
+              isActive={currentPage == currentPage}
+            >
               {currentPage}
             </PaginationLink>
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>{currentPage + 1}</PaginationLink>
-          </PaginationItem>
-          {(Data?.total_pages as number) - 5 !== currentPage && (
+          {currentPage < 499 && (
+            <PaginationItem>
+              <PaginationLink href={`?page=${currentPage + 1}`}>
+                {currentPage + 1}
+              </PaginationLink>
+            </PaginationItem>
+          )}
+          {currentPage <= 495 && (
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
           )}
-          <PaginationItem>
-            <PaginationLink>{Data?.total_pages}</PaginationLink>
-          </PaginationItem>
-          {currentPage !== Data?.total_pages && (
+          {currentPage < 496 && (
             <PaginationItem>
-              <PaginationNext onClick={() => setCurrentPage(currentPage + 1)} />
+              <PaginationLink href={`?page=500`}>{500}</PaginationLink>
+            </PaginationItem>
+          )}
+          {currentPage !== 500 && (
+            <PaginationItem>
+              <PaginationNext href={`?page=${currentPage + 1}`} />
             </PaginationItem>
           )}
         </PaginationContent>
