@@ -22,9 +22,8 @@ export const Dropdown = () => {
       .then((response) => setData(response.data));
   }, []);
   const router = useRouter();
-  const HandleGenre = (id: string) => {
-    router.push(`/Genres/${id}`);
-    console.log(id, "id");
+  const HandleGenre = (id: string, name: string) => {
+    router.push(`/Genres/${id}/${name}`);
   };
   return (
     <div className="bg-white w-fit h-fit rounded-sm">
@@ -47,7 +46,7 @@ export const Dropdown = () => {
             <div className="flex flex-wrap gap-4">
               {data?.genres.map((value: any, index: any) => (
                 <button
-                  onClick={() => HandleGenre(value.id)}
+                  onClick={() => HandleGenre(value.id, value.name)}
                   key={index}
                   className="bg-white border cursor-pointer border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit"
                 >

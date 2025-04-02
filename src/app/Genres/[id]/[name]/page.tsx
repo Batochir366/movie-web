@@ -1,7 +1,12 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { VoteAverage } from "@/components/VoteAverage";
 import {
   Pagination,
@@ -14,6 +19,8 @@ import {
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
 import { Method } from "axios";
+import { ChevronRight } from "lucide-react";
+import GenresButton from "@/components/GenresButton";
 type datatype = {
   total_pages: number | undefined;
   total_results: number;
@@ -29,8 +36,34 @@ type results = {
   vote_average: number;
 };
 const Movies = () => {
+  const { id } = useParams();
+  const { name } = useParams();
   const params = useSearchParams();
+  const page = params.get("page");
+  const pathname = usePathname();
   const [Data, setData] = useState<datatype>();
+  const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
+  const [genresId, setGenresId] = useState(id);
+  const [genresName, setGenresName] = useState("");
+  const searchParams = useSearchParams();
+
+  const HanleMovieGenreId = (id: string) => {
+    const test = searchParams.getAll("genresIds");
+    console.log(test, "test");
+
+    router.push(`${pathname}?genresIds=${id}`);
+  };
+  const HanleMovieGenreName = (name: string) => {
+    setGenresName((prev) => prev + ", " + name);
+  };
+
+  useEffect(() => {
+    axiosInstance
+      .get(`discover/movie?language=en&with_genres=${id}&page=${currentPage}`)
+      .then((response) => setData(response.data));
+  }, [genresId]);
+
+  console.log(Data, "inputValue");
 
   const [seeAllResults, setSeeAllResults] = useState<datatype>();
   useEffect(() => {
@@ -39,29 +72,9 @@ const Movies = () => {
       .then((response) => setSeeAllResults(response.data));
   }, []);
 
-  const { id } = useParams();
-  const page = params.get("page");
-  const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
-  useEffect(() => {
-    axiosInstance
-      .get(`discover/movie?language=en&with_genres=${id}&page=${currentPage}`)
-      .then((response) => setData(response.data));
-  }, [currentPage]);
-  console.log(Data, "inputValue");
-
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);
-  };
-
-  const genrename = (id: any) => {
-    {
-      seeAllResults?.genres.map((value: any, index: any) => {
-        if (value.id == id) {
-          return value.name;
-        }
-      });
-    }
   };
 
   return (
@@ -77,20 +90,21 @@ const Movies = () => {
           </div>
           <div className="flex flex-wrap gap-4">
             {seeAllResults?.genres.map((value: any, index: any) => (
-              <button
+              <GenresButton
+                onClick={() => {
+                  HanleMovieGenreId(value.id);
+                  HanleMovieGenreName(value.name);
+                }}
                 key={index}
-                className="bg-white border cursor-pointer border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit"
               >
                 {value.name}
-              </button>
+              </GenresButton>
             ))}
           </div>
         </div>
       </div>
       <div className="flex gap-8 items-start flex-col">
-        <p className="text-[28px] font-[600]">{`${
-          Data?.total_results
-        } titles in  ${genrename()}`}</p>
+        <p className="text-[28px] font-[600]">{`${Data?.total_results} titles in "${name}${genresName}"`}</p>
         <div className="gap-[32px] w-full justify-between flex flex-wrap">
           {Data?.results.slice(0, 12).map((value: any, i: number) => (
             <div key={i}>

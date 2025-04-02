@@ -26,13 +26,13 @@ const Movies = () => {
   const [Data, setData] = useState<datatype>();
   const [currentPage, setCurrentPage] = useState(1);
   const { datatype } = useParams();
+
   useEffect(() => {
     axiosInstance
       .get(`movie/${datatype}?language=en-US&page=${currentPage}`)
       .then((response) => setData(response.data));
   }, [currentPage]);
   console.log(Data, "data");
-
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);

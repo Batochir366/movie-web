@@ -25,7 +25,7 @@ const Movies = ({
   const HandleOnClick = (id: string) => {
     router.push(`details/${id}`);
   };
-  const HandleSeeMore = (datatype: string) => {
+  const HandleSeeMore = () => {
     router.push(`/SeeMore/${datatype}`);
   };
   return (
@@ -34,7 +34,7 @@ const Movies = ({
         <div className={`flex w-full justify-between `}>
           <h1 className="font-[600] text-[24px]">{ListName}</h1>
           <Button
-            onClick={() => HandleSeeMore(datatype)}
+            onClick={HandleSeeMore}
             className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] border-none font-[500] text-[#18181B] text-[14px]"
           >
             See more <ArrowRight className="text-black hover:bg-none" />
