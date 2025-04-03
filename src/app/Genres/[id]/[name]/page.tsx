@@ -48,6 +48,7 @@ const Movies = () => {
   const searchParams = useSearchParams();
 
   const HanleMovieGenreId = (id: string) => {
+    setGenresId(id);
     const test = searchParams.getAll("genresIds");
     console.log(test, "test");
 
@@ -59,18 +60,16 @@ const Movies = () => {
 
   useEffect(() => {
     axiosInstance
-      .get(`discover/movie?language=en&with_genres=${id}&page=${currentPage}`)
+      .get(
+        `discover/movie?language=en&with_genres=${id},${genresId}&page=${currentPage}`
+      )
       .then((response) => setData(response.data));
-  }, [genresId]);
-
-  console.log(Data, "inputValue");
-
-  const [seeAllResults, setSeeAllResults] = useState<datatype>();
-  useEffect(() => {
     axiosInstance
       .get(`genre/movie/list?language=en`)
       .then((response) => setSeeAllResults(response.data));
-  }, []);
+  }, [genresId]);
+
+  const [seeAllResults, setSeeAllResults] = useState<datatype>();
 
   const router = useRouter();
   const HandleOnClick = (id: string) => {
@@ -122,7 +121,12 @@ const Movies = () => {
                   alt="poster"
                 />
                 <div className="flex flex-col p-2 gap-[3px]">
-                  <VoteAverage voteAverage={value.vote_average} />
+                  <VoteAverage
+                    voteAverage={
+                      value.vote_average &&
+                      (Math.round(value.vote_average * 10) / 10).toFixed(1)
+                    }
+                  />
                   <p className="text-[12px] text-[#09090b] w-fit h-fit">
                     {value.title}
                   </p>
@@ -131,7 +135,7 @@ const Movies = () => {
             </div>
           ))}
         </div>
-        <Pagination>
+        <Pagination className="flex justify-end">
           <PaginationContent>
             {currentPage !== 1 && (
               <PaginationItem>

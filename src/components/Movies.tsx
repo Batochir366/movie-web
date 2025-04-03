@@ -2,7 +2,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { VoteAverage } from "./VoteAverage";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
@@ -44,7 +43,7 @@ const Movies = ({
           <div key={i}>
             <div
               onClick={() => HandleOnClick(value.id)}
-              className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]"
+              className="h-[440px] w-[230px] overflow-scroll rounded-[8px] bg-[#F4F4F5]"
             >
               <Image
                 className="w-[230px] hover:brightness-70 h-[340px] rounded-t-[8px] "
@@ -56,7 +55,12 @@ const Movies = ({
                 alt="poster"
               />
               <div className="flex flex-col p-2 gap-[3px]">
-                <VoteAverage voteAverage={value.vote_average} />
+                <VoteAverage
+                  voteAverage={
+                    value.vote_average &&
+                    (Math.round(value.vote_average * 10) / 10).toFixed(1)
+                  }
+                />
                 <p className="text-[12px] text-[#09090b] w-[214px] h-fit">
                   {value.title}
                 </p>

@@ -30,7 +30,7 @@ type genres = {
 const page = ({ className }: { voteAverage: string; className: string }) => {
   const [data, setData] = useState<datatype>();
   const [similarMovieData, setSimilarMovieData] = useState<datatype>();
-  const { id }:{id:string} = useParams();
+  const { id }: { id: string } = useParams();
 
   useEffect(() => {
     axiosInstance
@@ -91,7 +91,6 @@ const page = ({ className }: { voteAverage: string; className: string }) => {
                     </p>
                   </div>
                 </div>
-                <p>{}</p>
               </div>
             </div>
           </div>

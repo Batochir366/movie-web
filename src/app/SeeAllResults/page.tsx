@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { VoteAverage } from "@/components/VoteAverage";
 import {
@@ -13,6 +13,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
+import GenresButton from "@/components/GenresButton";
 type datatype = {
   total_pages: number | undefined;
   total_results: number;
@@ -20,36 +21,47 @@ type datatype = {
   genres: genres[];
 };
 type genres = {
-  name: string;
+  genres: string;
 };
 type results = {
   poster_path: string;
   backdrop_path: string;
   vote_average: number;
+  genre_ids: number[];
 };
+
 const Movies = () => {
   const params = useSearchParams();
   const [Data, setData] = useState<datatype>();
+  const [GenreData, setGenreData] = useState<datatype>();
   const page = params.get("page");
   const search = params.get("search");
   const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
-  const [seeAllResults, setSeeAllResults] = useState<datatype>();
+  const [genreList, setGenreList] = useState<datatype>();
+  const [genresId, setGenresId] = useState<number>();
   useEffect(() => {
     axiosInstance
       .get(`genre/movie/list?language=en`)
-      .then((response) => setSeeAllResults(response.data));
+      .then((response) => setGenreList(response.data));
   }, []);
   useEffect(() => {
     axiosInstance
       .get(`search/movie?query=${search}&language=en-US&page=${currentPage}`)
       .then((response) => setData(response.data));
   }, [currentPage, search]);
-  console.log(Data, "inputValue");
 
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);
   };
+
+  const HanleMovieGenreId = (id: number) => {
+    setGenresId(id);
+  };
+
+  Data?.results.filter((value, index) => {
+    return console.log(value.genre_ids.includes(genresId as number));
+  });
 
   return (
     <div className="w-full pt-[52px] flex px-[80px] gap-[52px]">
@@ -61,7 +73,7 @@ const Movies = () => {
             <div key={i}>
               <div
                 onClick={() => HandleOnClick(value.id)}
-                className="h-[331px] w-[165px] rounded-[8px] bg-[#F4F4F5]"
+                className="h-[331px] overflow-scroll w-[165px] rounded-[8px] bg-[#F4F4F5]"
               >
                 <Image
                   className="w-[165px] h-[244px] rounded-t-[8px] "
@@ -73,7 +85,12 @@ const Movies = () => {
                   alt="poster"
                 />
                 <div className="flex flex-col p-2 gap-[3px]">
-                  <VoteAverage voteAverage={value.vote_average} />
+                  <VoteAverage
+                    voteAverage={
+                      value.vote_average &&
+                      (Math.round(value.vote_average * 10) / 10).toFixed(1)
+                    }
+                  />
                   <p className="text-[12px] text-[#09090b] w-fit h-fit">
                     {value.title}
                   </p>
@@ -82,7 +99,7 @@ const Movies = () => {
             </div>
           ))}
         </div>
-        <Pagination>
+        <Pagination className="flex justify-end">
           <PaginationContent>
             {currentPage !== 1 && (
               <PaginationItem>
@@ -148,13 +165,15 @@ const Movies = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            {seeAllResults?.genres.map((value: any, index: any) => (
-              <button
+            {genreList?.genres.map((value: any, index: number) => (
+              <GenresButton
+                onClick={() => {
+                  HanleMovieGenreId(value.id);
+                }}
                 key={index}
-                className="bg-white border cursor-pointer border-[#E4E4E7] text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit"
               >
                 {value.name}
-              </button>
+              </GenresButton>
             ))}
           </div>
         </div>

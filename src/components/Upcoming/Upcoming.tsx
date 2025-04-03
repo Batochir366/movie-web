@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import {
   Dialog,
   DialogContent,
@@ -17,10 +18,8 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { DescriptionBox } from "./DescriptionBox";
-import axios from "axios";
 import { PlayIcon } from "lucide-react";
 import { useParams } from "next/navigation";
-import { log } from "console";
 import { axiosInstance } from "@/lib/utils";
 type datatype = {
   results: results[];
@@ -44,14 +43,24 @@ export const Upcoming = () => {
   }, [id]);
 
   return (
-    <Carousel className="w-full h-[600px]">
+    <Carousel
+      className="w-full h-[600px]"
+      plugins={[
+        Autoplay({
+          delay: 3000,
+        }),
+      ]}
+    >
       <CarouselContent className="w-full h-[600px]">
         {upcomingData?.results.slice(0, 3).map((value: any, index: number) => (
           <CarouselItem key={index} className="w-full relative h-[600px]">
             <div className="flex flex-col gap-4 absolute z-20">
               <DescriptionBox
                 overview={value.overview}
-                vote_average={value.vote_average}
+                vote_average={
+                  value.vote_average &&
+                  (Math.round(value.vote_average * 10) / 10).toFixed(1)
+                }
                 original_title={value.original_title}
               />
               <div className="flex pl-[140px]">

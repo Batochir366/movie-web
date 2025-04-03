@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { VoteAverage } from "@/components/VoteAverage";
 import {
   Pagination,
@@ -24,7 +24,9 @@ type results = {
 };
 const Movies = () => {
   const [Data, setData] = useState<datatype>();
-  const [currentPage, setCurrentPage] = useState(1);
+  const params = useSearchParams();
+  const page = params.get("page");
+  const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
   const { datatype } = useParams();
 
   useEffect(() => {
@@ -38,10 +40,16 @@ const Movies = () => {
     router.push(`/details/${id}`);
   };
   return (
-    <div className="flex flex-col">
-      <h1 className="font-[600] flex px-[80px] text-[24px]">{datatype}</h1>
-      <div className="flex flex-col w-full pt-[52px] gap-[52px]">
-        <div className="gap-[32px] w-full justify-between overflow-scroll flex px-[80px] flex-wrap">
+    <div className="flex gap-[32px] flex-col">
+      <div className="flex">
+        <h1 className="font-[600] flex px-[80px] text-[24px]">
+          {datatype === "upcoming" && "Upcoming"}
+          {datatype === "top_rated" && "Top Rated"}
+          {datatype === "popular" && "Popular"}
+        </h1>
+      </div>
+      <div className="flex flex-col w-full gap-[52px]">
+        <div className="gap-[32px] w-full overflow-scroll flex px-[80px] flex-wrap">
           {Data?.results?.slice(0, 10).map((value: any, i: any) => (
             <div key={i}>
               <div
@@ -49,7 +57,7 @@ const Movies = () => {
                 className="h-[440px] w-[230px] rounded-[8px] bg-[#F4F4F5]"
               >
                 <Image
-                  className="w-[230px] h-[340px] rounded-t-[8px] "
+                  className="w-[230px] hover:brightness-75 h-[340px] rounded-t-[8px] "
                   height={340}
                   width={230}
                   src={`https://image.tmdb.org/t/p/original${
@@ -58,7 +66,12 @@ const Movies = () => {
                   alt="poster"
                 />
                 <div className="flex flex-col p-2 gap-[3px]">
-                  <VoteAverage voteAverage={value.vote_average} />
+                  <VoteAverage
+                    voteAverage={
+                      value.vote_average &&
+                      (Math.round(value.vote_average * 10) / 10).toFixed(1)
+                    }
+                  />
                   <p className="text-[12px] text-[#09090b] w-[214px] h-fit">
                     {value.title}
                   </p>
@@ -68,7 +81,7 @@ const Movies = () => {
           ))}
         </div>
       </div>
-      <Pagination>
+      <Pagination className="flex justify-end pr-[80px]">
         <PaginationContent>
           {currentPage !== 1 && (
             <PaginationItem>

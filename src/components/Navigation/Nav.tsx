@@ -22,7 +22,6 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
       .then((response) => setData(response.data));
   }, [inputValue]);
 
-  console.log(data, `dataaa`);
   const router = useRouter();
   const HandleDetails = (id: string) => {
     router.push(`/details/${id}`);
