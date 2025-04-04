@@ -64,7 +64,7 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
                       voteAverage={value.vote_average}
                       release_date={
                         value.release_date.slice(0, 4) ||
-                        "release date not found😿"
+                        "release date not found"
                       }
                       original_title={value.original_title}
                     />

@@ -78,7 +78,9 @@ const page = ({ className }: { voteAverage: string; className: string }) => {
                         }
                       >
                         {data?.vote_average &&
-                          (Math.round(data?.vote_average * 10) / 10).toFixed(1)}
+                          (Math.round(data?.vote_average * 100) / 100).toFixed(
+                            1
+                          )}
                       </h3>
                       <h3 className="text-[#71717A] text-[16px] font-[400] ">
                         /10

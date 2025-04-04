@@ -29,6 +29,7 @@ type datatype = {
 };
 type genres = {
   name: string;
+  id: number;
 };
 type results = {
   poster_path: string;
@@ -42,43 +43,65 @@ const Movies = () => {
   const page = params.get("page");
   const pathname = usePathname();
   const [Data, setData] = useState<datatype>();
+  const [genreList, setGenreList] = useState<datatype>();
   const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
-  const [genresId, setGenresId] = useState(id);
-  const [genresName, setGenresName] = useState("");
   const searchParams = useSearchParams();
+  // let paramIds = searchParams.getAll("genresIds");
+  let Paramsgenres = params.getAll("genres");
 
-  const HanleMovieGenreId = (id: string) => {
-    setGenresId(id);
-    const test = searchParams.getAll("genresIds");
-    console.log(test, "test");
+  const handleSelect = (id: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    let Paramsgenres = params.getAll("genres");
 
-    router.push(`${pathname}?genresIds=${id}`);
+    // Toggle selection
+    if (Paramsgenres.includes(id.toString())) {
+      Paramsgenres = Paramsgenres.filter((genre) => genre !== id.toString());
+    } else {
+      Paramsgenres.push(id.toString());
+    }
+
+    // Update URL parameters
+    params.delete("genres");
+    Paramsgenres.forEach((genre) => params.append("genres", genre));
+
+    router.push(`?${params.toString()}`, { scroll: false });
   };
-  const HanleMovieGenreName = (name: string) => {
-    setGenresName((prev) => prev + ", " + name);
+  const findName = (array: any) => {
+    for (let i = 0; i < array.length; i++) {
+      console.log(array[i]);
+      const name = genreList?.genres.filter((element) => if (element.id == Number(array[i])) {
+          console.log(element.name);
+          return element.name;
+        }
+      );
+      console.log(name, "name");
+
+      return name;
+    }
   };
+  console.log(findName(Paramsgenres), "working");
 
   useEffect(() => {
     axiosInstance
       .get(
-        `discover/movie?language=en&with_genres=${id},${genresId}&page=${currentPage}`
+        `discover/movie?language=en&with_genres=${id},${Paramsgenres}&page=${currentPage}`
       )
       .then((response) => setData(response.data));
+  }, [searchParams]);
+
+  useEffect(() => {
     axiosInstance
       .get(`genre/movie/list?language=en`)
-      .then((response) => setSeeAllResults(response.data));
-  }, [genresId]);
-
-  const [seeAllResults, setSeeAllResults] = useState<datatype>();
+      .then((response) => setGenreList(response.data));
+  }, []);
 
   const router = useRouter();
   const HandleOnClick = (id: string) => {
     router.push(`/details/${id}`);
   };
-
   return (
     <div className="w-full pt-[52px] flex px-[80px] gap-[52px]">
-      <div className="w-[577px] flex flex-col gap-5">
+      <div className="w-[577px] fixed flex flex-col gap-5">
         <h1 className="font-[600] flex text-[24px]">Search Filter</h1>
         <div className="w-[387px] flex flex-col gap-5">
           <div className="flex flex-col gap-1">
@@ -88,11 +111,10 @@ const Movies = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            {seeAllResults?.genres.map((value: any, index: any) => (
+            {genreList?.genres.map((value: any, index: any) => (
               <GenresButton
                 onClick={() => {
-                  HanleMovieGenreId(value.id);
-                  HanleMovieGenreName(value.name);
+                  handleSelect(value.id);
                 }}
                 key={index}
               >
@@ -102,10 +124,12 @@ const Movies = () => {
           </div>
         </div>
       </div>
-      <div className="flex gap-8 items-start flex-col">
-        <p className="text-[28px] font-[600]">{`${Data?.total_results} titles in "${name}${genresName}"`}</p>
-        <div className="gap-[32px] w-full justify-between flex flex-wrap">
-          {Data?.results.slice(0, 12).map((value: any, i: number) => (
+      <div className="flex gap-8 pl-[400px] items-start flex-col">
+        <p className="text-[28px] font-[600]">{`${
+          Data?.total_results
+        } titles in ${name} ${findName(Paramsgenres)}`}</p>
+        <div className="gap-[32px] overflow-scroll w-full justify-between flex flex-wrap">
+          {Data?.results.slice(0, 20).map((value: any, i: number) => (
             <div key={i}>
               <div
                 onClick={() => HandleOnClick(value.id)}
