@@ -34,7 +34,7 @@ const Movies = ({
           <h1 className="font-[600] text-[24px]">{ListName}</h1>
           <Button
             onClick={HandleSeeMore}
-            className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] border-none font-[500] text-[#18181B] text-[14px]"
+            className="flex gap-2 px-4 py-2 bg-white hover:bg-[#F4F4F5] shadow-lg border-none font-[500] text-[#18181B] text-[14px]"
           >
             See more <ArrowRight className="text-black hover:bg-none" />
           </Button>
@@ -43,7 +43,7 @@ const Movies = ({
           <div key={i}>
             <div
               onClick={() => HandleOnClick(value.id)}
-              className="h-[440px] w-[230px] overflow-scroll rounded-[8px] bg-[#F4F4F5]"
+              className="h-[440px] drop-shadow-lg w-[230px] rounded-[8px] bg-[#F4F4F5]"
             >
               <Image
                 className="w-[230px] hover:brightness-70 h-[340px] rounded-t-[8px] "

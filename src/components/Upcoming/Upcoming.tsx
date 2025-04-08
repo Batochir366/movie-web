@@ -19,7 +19,6 @@ import {
 import Image from "next/image";
 import { DescriptionBox } from "./DescriptionBox";
 import { PlayIcon } from "lucide-react";
-import { useParams } from "next/navigation";
 import { axiosInstance } from "@/lib/utils";
 type datatype = {
   results: results[];
@@ -28,6 +27,11 @@ type datatype = {
 type results = {
   key: string;
   id: Number;
+  backdrop_path: string;
+  poster_path: string;
+  overview: string;
+  vote_average: number;
+  original_title: string;
 };
 export const Upcoming = () => {
   const [upcomingData, setUpcomingData] = useState<datatype>();
@@ -43,16 +47,9 @@ export const Upcoming = () => {
   }, [id]);
 
   return (
-    <Carousel
-      className="w-full h-[600px]"
-      plugins={[
-        Autoplay({
-          delay: 3000,
-        }),
-      ]}
-    >
+    <Carousel plugins={[Autoplay({ delay: 3000 })]} className="w-full h-[600px]">
       <CarouselContent className="w-full h-[600px]">
-        {upcomingData?.results.slice(0, 3).map((value: any, index: number) => (
+        {upcomingData?.results.slice(0, 3).map((value:any, index: number) => (
           <CarouselItem key={index} className="w-full relative h-[600px]">
             <div className="flex flex-col gap-4 absolute z-20">
               <DescriptionBox

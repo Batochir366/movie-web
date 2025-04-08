@@ -18,8 +18,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
-import { Method } from "axios";
-import { ChevronRight } from "lucide-react";
 import GenresButton from "@/components/GenresButton";
 type datatype = {
   total_pages: number | undefined;
@@ -66,21 +64,7 @@ const Movies = () => {
 
     router.push(`?${params.toString()}`, { scroll: false });
   };
-  const findName = (array: any) => {
-    for (let i = 0; i < array.length; i++) {
-      console.log(array[i]);
-      const name = genreList?.genres.filter((element) => if (element.id == Number(array[i])) {
-          console.log(element.name);
-          return element.name;
-        }
-      );
-      console.log(name, "name");
-
-      return name;
-    }
-  };
-  console.log(findName(Paramsgenres), "working");
-
+ 
   useEffect(() => {
     axiosInstance
       .get(
@@ -127,7 +111,7 @@ const Movies = () => {
       <div className="flex gap-8 pl-[400px] items-start flex-col">
         <p className="text-[28px] font-[600]">{`${
           Data?.total_results
-        } titles in ${name} ${findName(Paramsgenres)}`}</p>
+        } titles in ${name} ${""}`}</p>
         <div className="gap-[32px] overflow-scroll w-full justify-between flex flex-wrap">
           {Data?.results.slice(0, 20).map((value: any, i: number) => (
             <div key={i}>

@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown } from "./Dropdown";
 import { InputSearch } from "./InputSearch";
-import { Film, Moon } from "lucide-react";
-import axios from "axios";
+import { Film, Moon, Search, X } from "lucide-react";
 import { MovieSearchResult } from "./MovieSearchResult";
 import { useParams, useRouter } from "next/navigation";
 import { axiosInstance } from "@/lib/utils";
@@ -35,22 +34,39 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
     router.push(`/SeeAllResults?search=${inputValue}&page=1`);
     setInputValue("");
   };
+  const [isActive, setIsActive] = useState(true);
+  const HanleIsActive = () => {
+    setIsActive(!isActive);
+  };
   return (
-    <nav className="w-full h-full px-[80px] py-[11.5px]">
-      <div className="w-full justify-around flex">
-        <div
-          onClick={HandleHome}
-          className="flex cursor-pointer gap-2 items-center justify-center"
-        >
-          <Film className="text-indigo-700 size-[20px]" />
-          <h1 className="text-[16px] italic text-indigo-700 font-[700]">
-            Movie Z
-          </h1>
-        </div>
-        <div className="w-fit flex gap-3">
-          <Dropdown />
+    <nav className="w-full h-full flex md:px-[80px] justify-between px-5 py-[11.5px]">
+      <div
+        onClick={HandleHome}
+        className="flex cursor-pointer gap-2 items-center justify-center"
+      >
+        <Film className="text-indigo-700 size-[20px]" />
+        <h1 className="text-[16px] w-[80px] italic text-indigo-700 font-[700]">
+          Movie Z
+        </h1>
+      </div>
+      <div className="flex gap-3">
+        <div className="md:w-full w-fit flex">
+          <Dropdown className="hidden md:flex" />
           <div className="flex gap-1 flex-col">
-            <InputSearch HandleOnChange={HandleInputValue} />
+            <InputSearch
+              className="hidden md:flex"
+              HandleOnChange={HandleInputValue}
+            />
+            <div
+              onClick={() => HanleIsActive()}
+              className="size-[36px] flex md:hidden shadow-sm justify-center items-center bg-white border border-[#E4E4E7] border-solid rounded-[10px] "
+            >
+              {isActive ? (
+                <Search className="size-4" />
+              ) : (
+                <X className="size-4" />
+              )}
+            </div>
             <div>
               {data && inputValue !== "" && (
                 <div className="bg-white w-fit h-fit absolute z-20 border-[#E4E4E7] rounded-lg border border-solid p-3">
@@ -80,6 +96,7 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
             </div>
           </div>
         </div>
+
         <div
           onClick={() => HandleOnClick()}
           className="size-[36px] shadow-sm flex justify-center items-center bg-white border border-[#E4E4E7] border-solid rounded-[10px] "

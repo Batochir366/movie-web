@@ -2,11 +2,13 @@ import React from "react";
 import { Search } from "lucide-react";
 export const InputSearch = ({
   HandleOnChange,
+  className
 }: {
-  HandleOnChange: (event: any) => void;
+  HandleOnChange: (event: any) => void,
+  className:string
 }) => {
   return (
-    <div className="flex justify-center items-center bg-white border border-solid rounded-md border-[#E4E4E7] w-fit h-[36px] px-3 gap-[10px]">
+    <div className={`flex justify-center items-center bg-white border border-solid rounded-md border-[#E4E4E7] w-fit h-[36px] px-3 gap-[10px] `+ className}>
       <Search className="size-4 opacity-[0.5]" />
       <input
         placeholder="Search.."

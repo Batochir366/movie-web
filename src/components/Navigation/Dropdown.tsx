@@ -14,7 +14,7 @@ type datatype = {
 type genres = {
   name: string;
 };
-export const Dropdown = () => {
+export const Dropdown = ({className}:{className:string}) => {
   const [data, setData] = useState<datatype>();
   useEffect(() => {
     axiosInstance
@@ -26,7 +26,7 @@ export const Dropdown = () => {
     router.push(`/Genres/${id}/${name}`);
   };
   return (
-    <div className="bg-white w-fit h-fit rounded-sm">
+    <div className={`bg-white w-fit h-fit rounded-sm `+ className}>
       <Popover>
         <PopoverTrigger className="border-[#E4E4E7] cursor-pointer w-fit h-[36px] shadow-sm px-4 py-2 justify-center items-center font-[500] text-[14px]  gap-2  flex  border-solid border rounded-md">
           <ChevronDown className="size-4" />
