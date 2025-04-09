@@ -42,16 +42,35 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
     <nav className="w-full h-full flex md:px-[80px] justify-between px-5 py-[11.5px]">
       <div
         onClick={HandleHome}
-        className="flex cursor-pointer gap-2 items-center justify-center"
+        className={`cursor-pointer gap-2 items-center justify-center ${
+          isActive ? "flex" : "hidden"
+        }`}
       >
         <Film className="text-indigo-700 size-[20px]" />
         <h1 className="text-[16px] w-[80px] italic text-indigo-700 font-[700]">
           Movie Z
         </h1>
       </div>
-      <div className="flex gap-3">
-        <div className="md:w-full w-fit flex">
-          <Dropdown className="hidden md:flex" />
+      <Dropdown
+        isActive={isActive}
+        className={`${isActive ? "hidden" : null}`}
+      />
+      <div className="flex gap-3 md:justify-center md:w-full">
+        <div
+          className={`flex justify-center items-center bg-white border ${
+            isActive ? "hidden" : null
+          } border-solid rounded-md border-[#E4E4E7] w-fit h-[36px] px-3 gap-[10px] `}
+        >
+          <Search className="size-4 opacity-[0.5]" />
+          <input
+            placeholder="Search.."
+            onChange={HandleInputValue}
+            className={
+              "file:text-foreground border-none h-[20px] flex shadow-none w-[227px] placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input min-w-0 rounded-md border bg-transparent px-3 py-1 text-base  transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-smaria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+            }
+          />
+        </div>
+        <div className="flex md:justify-center gap-3 md:w-full">
           <div className="flex gap-1 flex-col">
             <InputSearch
               className="hidden md:flex"
@@ -96,7 +115,6 @@ export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
             </div>
           </div>
         </div>
-
         <div
           onClick={() => HandleOnClick()}
           className="size-[36px] shadow-sm flex justify-center items-center bg-white border border-[#E4E4E7] border-solid rounded-[10px] "

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -14,7 +14,13 @@ type datatype = {
 type genres = {
   name: string;
 };
-export const Dropdown = ({className}:{className:string}) => {
+export const Dropdown = ({
+  className,
+  isActive,
+}: {
+  className: string;
+  isActive: boolean;
+}) => {
   const [data, setData] = useState<datatype>();
   useEffect(() => {
     axiosInstance
@@ -26,14 +32,25 @@ export const Dropdown = ({className}:{className:string}) => {
     router.push(`/Genres/${id}/${name}`);
   };
   return (
-    <div className={`bg-white w-fit h-fit rounded-sm `+ className}>
+    <div className={`bg-white w-fit h-fit rounded-sm ` + className}>
       <Popover>
-        <PopoverTrigger className="border-[#E4E4E7] cursor-pointer w-fit h-[36px] shadow-sm px-4 py-2 justify-center items-center font-[500] text-[14px]  gap-2  flex  border-solid border rounded-md">
-          <ChevronDown className="size-4" />
-          Genre
-        </PopoverTrigger>
+        {isActive ? (
+          <PopoverTrigger
+            className={`border-[#E4E4E7] cursor-pointer w-fit h-[36px] shadow-sm px-4 py-2 justify-center items-center font-[500] text-[14px]  gap-2  flex  border-solid border rounded-md`}
+          >
+            <ChevronDown className="size-4" />
+            Genre
+          </PopoverTrigger>
+        ) : (
+          <PopoverTrigger
+            className={`border-[#E4E4E7] cursor-pointer w-fit shadow-sm p-2 flex  border-solid border rounded-md`}
+          >
+            <ChevronDown className="size-4" />
+          </PopoverTrigger>
+        )}
+
         <PopoverContent className="flex p-5 border-[#E4E4E7] border border-solid rounded-lg bg-white w-fit h-fit">
-          <div className="w-[577px]">
+          <div className="w-[295px] h-[473px]">
             <div className="flex flex-col gap-1">
               <p className="text-[24px] font-[600] text-black">Genres</p>
               <p className="text-[16px] text-black">
