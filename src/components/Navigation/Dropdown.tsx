@@ -18,8 +18,8 @@ export const Dropdown = ({
   className,
   isActive,
 }: {
-  className: string;
-  isActive: boolean;
+  className?: string;
+  isActive?: boolean;
 }) => {
   const [data, setData] = useState<datatype>();
   useEffect(() => {
@@ -48,9 +48,8 @@ export const Dropdown = ({
             <ChevronDown className="size-4" />
           </PopoverTrigger>
         )}
-
         <PopoverContent className="flex p-5 border-[#E4E4E7] border border-solid rounded-lg bg-white w-fit h-fit">
-          <div className="w-[295px] h-[473px]">
+          <div className={`${isActive ? "w-[537px]" : "w-[295px] h-[473px]"}`}>
             <div className="flex flex-col gap-1">
               <p className="text-[24px] font-[600] text-black">Genres</p>
               <p className="text-[16px] text-black">

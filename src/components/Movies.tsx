@@ -29,7 +29,7 @@ const Movies = ({
   };
   return (
     <div className="flex flex-col w-full pt-[52px] gap-[52px]">
-      <div className="gap-[32px] w-full justify-between flex px-[80px] flex-wrap">
+      <div className="md:gap-[32px] gap-4 w-full justify-between flex px-4 md:px-[80px] sm:px-[90px] flex-wrap">
         <div className={`flex w-full justify-between `}>
           <h1 className="font-[600] text-[24px]">{ListName}</h1>
           <Button
@@ -43,10 +43,10 @@ const Movies = ({
           <div key={i}>
             <div
               onClick={() => HandleOnClick(value.id)}
-              className="h-[440px] drop-shadow-lg w-[230px] rounded-[8px] bg-[#F4F4F5]"
+              className="md:h-[440px] h-[309px] drop-shadow-lg  md:w-[230px] w-[157px] rounded-[8px] bg-[#F4F4F5]"
             >
               <Image
-                className="w-[230px] hover:brightness-70 h-[340px] rounded-t-[8px] "
+                className="md:w-[230px] w-[158px] hover:brightness-70 md:h-[340px] h-[230px] rounded-t-[8px] "
                 height={340}
                 width={230}
                 src={`https://image.tmdb.org/t/p/original${

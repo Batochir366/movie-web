@@ -39,7 +39,6 @@ const Movies = () => {
   const { name } = useParams();
   const params = useSearchParams();
   const page = params.get("page");
-  const pathname = usePathname();
   const [Data, setData] = useState<datatype>();
   const [genreList, setGenreList] = useState<datatype>();
   const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
@@ -64,7 +63,7 @@ const Movies = () => {
 
     router.push(`?${params.toString()}`, { scroll: false });
   };
- 
+
   useEffect(() => {
     axiosInstance
       .get(
