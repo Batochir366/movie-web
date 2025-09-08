@@ -1,33 +1,24 @@
 import { ChevronRight, X } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
 const GenresButton = ({
   onClick,
   children,
+  active,
 }: {
   onClick: () => void;
   children: string;
+  active: boolean;
 }) => {
-  const [isActive, setIsActive] = useState(true);
-  const HanleIsActive = () => {
-    setIsActive(!isActive);
-  };
   return (
     <button
-      onClick={() => {
-        onClick();
-        HanleIsActive();
-      }}
+      onClick={onClick}
       className={`${
-        isActive ? "bg-white text-black" : "bg-black text-white"
-      } border cursor-pointer border-[#E4E4E7] justify-center items-center text-[12px] font-[600] flex border-solid px-[10px] py-1 h-fit rounded-full w-fit`}
+        active ? "bg-black text-white" : "bg-white text-black"
+      } border cursor-pointer border-[#E4E4E7] flex items-center justify-center gap-1 text-[12px] font-semibold px-[10px] py-1 rounded-full transition-colors duration-200 h-fit`}
     >
       {children}
-      {isActive ? (
-        <ChevronRight className="size-4" />
-      ) : (
-        <X className="size-4" />
-      )}
+      {active ? <X className="size-4" /> : <ChevronRight className="size-4" />}
     </button>
   );
 };

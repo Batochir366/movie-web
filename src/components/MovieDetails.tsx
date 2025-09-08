@@ -1,10 +1,10 @@
 import { useParams } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
-import { Separator } from "./Separator";
+import React, { useEffect, useState, Suspense } from "react";
+
 import { axiosInstance } from "@/lib/utils";
+import { Separator } from "@radix-ui/react-separator";
+
 type datatype = {
-  overview: string;
-  job: string;
   cast: cast[];
   crew: crew[];
 };
@@ -17,6 +17,7 @@ type crew = {
   job: string;
   department: string;
 };
+
 const MovieDetails = () => {
   const [data, setData] = useState<datatype>();
   const { id } = useParams();
@@ -24,49 +25,55 @@ const MovieDetails = () => {
   useEffect(() => {
     axiosInstance
       .get(`movie/${id}/credits?language=en-US`)
-      .then((response) => setData(response.data));
-  }, []);
+      .then((response) => setData(response.data))
+      .catch((err) => console.error(err));
+  }, [id]);
+
+  if (!data) return null;
+
+  const directors = data.crew.filter((c) => c.job === "Director");
+  const writers = data.crew.filter((c) => c.department === "Writing");
+  const stars = data.cast.slice(0, 3);
+
+  const renderPeople = (people: { name: string }[]) => (
+    <div className="flex flex-wrap gap-2">
+      {people.map((person, idx) => (
+        <span
+          key={idx}
+          className="text-gray-800 text-sm sm:text-base font-medium"
+        >
+          {person.name}
+        </span>
+      ))}
+    </div>
+  );
+
   return (
     <Suspense>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-[53px] ">
-          <h1 className="text-[17px] w-[67px] font-[700]">Director</h1>
-          {data?.crew.map((value, index) => {
-            return (
-              value.job === "Director" && (
-                <h1 className="text-[16px]" key={index}>
-                  {value.name}
-                </h1>
-              )
-            );
-          })}
+      <div className="flex flex-col gap-3">
+        {/* Director */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+          <h2 className="w-[70px] font-bold text-gray-900">Director</h2>
+          {renderPeople(directors)}
         </div>
         <Separator />
-        <div className="flex gap-[53px]">
-          <h1 className="text-[17px]  w-[67px] font-[700]">Writers</h1>
-          {data?.crew.map((value, index) => {
-            return (
-              value.known_for_department &&
-              value.department === "Writing" && (
-                <h1 className="text-[16px]" key={index}>
-                  {value.name}
-                </h1>
-              )
-            );
-          })}
+
+        {/* Writers */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+          <h2 className="w-[70px] font-bold text-gray-900">Writers</h2>
+          {renderPeople(writers)}
         </div>
         <Separator />
-        <div className="flex gap-[53px]">
-          <h1 className="text-[17px] w-[67px] font-[700]">Stars</h1>
-          {data?.cast.slice(0, 3).map((value, index) => (
-            <h1 key={index} className="text-[16px]">
-              {value.name}
-            </h1>
-          ))}
+
+        {/* Stars */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+          <h2 className="w-[70px] font-bold text-gray-900">Stars</h2>
+          {renderPeople(stars)}
         </div>
         <Separator />
       </div>
     </Suspense>
   );
 };
+
 export default MovieDetails;

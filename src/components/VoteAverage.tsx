@@ -1,4 +1,3 @@
-import { Star } from "lucide-react";
 import React from "react";
 
 export const VoteAverage = ({
@@ -10,7 +9,6 @@ export const VoteAverage = ({
 }) => {
   return (
     <div className="flex gap-2 items-center">
-      <Star className="text-[#FDE047] fill-[#FDE047] size-[16px]" />
       <div className="flex justify-center items-center">
         <h3 className={`text-[#09090B] text-[14px] font-[600] ` + className}>
           {voteAverage}

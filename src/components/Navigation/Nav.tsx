@@ -1,130 +1,217 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Dropdown } from "./Dropdown";
-import { InputSearch } from "./InputSearch";
-import { Film, Moon, Search, X } from "lucide-react";
+import { Film, Menu, X, Search } from "lucide-react";
 import { MovieSearchResult } from "./MovieSearchResult";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/lib/utils";
-type results = {
-  results: [];
+import { Dropdown } from "./Dropdown";
+
+type Results = {
+  results: any[];
 };
-export const Nav = ({ HandleOnClick }: { HandleOnClick: () => void }) => {
+
+export const Nav = () => {
   const [inputValue, setInputValue] = useState("");
-  const HandleInputValue = (event: any) => {
+  const [data, setData] = useState<Results>();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  const router = useRouter();
+
+  const handleInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
-  const [data, setData] = useState<results>();
+
   useEffect(() => {
+    if (!inputValue.trim()) return;
     axiosInstance
       .get(`search/movie?query=${inputValue}&language=en-US&page=1`)
       .then((response) => setData(response.data));
   }, [inputValue]);
 
-  const router = useRouter();
-  const HandleDetails = (id: string) => {
+  const handleDetails = (id: string) => {
     router.push(`/details/${id}`);
     setInputValue("");
+    setIsMenuOpen(false);
+    setIsSearchFocused(false);
   };
-  const HandleHome = () => {
+
+  const handleHome = () => {
     router.push("/");
-    console.log("working");
+    setIsMenuOpen(false);
   };
-  const HandleResults = (inputValue: string) => {
-    router.push(`/SeeAllResults?search=${inputValue}&page=1`);
+
+  const handleResults = (value: string) => {
+    router.push(`/SeeAllResults?search=${value}&page=1`);
     setInputValue("");
+    setIsMenuOpen(false);
+    setIsSearchFocused(false);
   };
-  const [isActive, setIsActive] = useState(true);
-  const HanleIsActive = () => {
-    setIsActive(!isActive);
+
+  const clearSearch = () => {
+    setInputValue("");
+    setData(undefined);
+    setIsSearchFocused(false);
   };
+
   return (
-    <nav className="w-full h-full flex md:px-[80px] justify-between items-center px-5 py-[11.5px]">
-      <div
-        onClick={HandleHome}
-        className={`cursor-pointer gap-2 items-center justify-center ${
-          isActive ? "flex" : "hidden"
-        }`}
-      >
-        <Film className="text-indigo-700 size-[20px]" />
-        <h1 className="text-[16px] w-[80px] italic text-indigo-700 font-[700]">
-          Movie Z
-        </h1>
-      </div>
-      <div className="flex gap-3 md:justify-center justify-center md:w-full">
-        <Dropdown
-          isActive={isActive}
-          className={`${isActive ? "hidden" : null}`}
-        />
+    <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <div className="flex items-center justify-between px-4 md:px-8 lg:px-20 py-4">
+        {/* Logo */}
         <div
-          className={`flex justify-center items-center ${
-            isActive ? "hidden" : null
-          } border-solid rounded-md w-fit h-[36px] px-3 gap-[10px] `}
+          onClick={handleHome}
+          className="cursor-pointer flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
-          <Search className="size-4 opacity-[0.5]" />
-          <input
-            placeholder="Search.."
-            onChange={HandleInputValue}
-            className={
-              "w-[201px] h-[20px] focus-visible:outline-none text-[14px]"
-            }
-          />
+          <div className="p-2 bg-indigo-100 rounded-lg">
+            <Film className="text-indigo-600 size-6" />
+          </div>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Movie Z
+          </h1>
         </div>
-        <div className="flex md:justify-center gap-3 md:w-full">
-          <Dropdown className="hidden md:flex" isActive={true} />
-          <div className="flex gap-1 flex-col">
-            <InputSearch
-              className="hidden md:flex"
-              HandleOnChange={HandleInputValue}
+
+        {/* Desktop Search */}
+        <div className="hidden md:flex flex-col relative flex-1 max-w-md mx-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
+            <input
+              placeholder="Search for movies..."
+              value={inputValue}
+              onChange={handleInputValue}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+              className="w-full h-11 pl-10 pr-4 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
             />
-            <div
-              onClick={() => HanleIsActive()}
-              className="size-[36px] flex md:hidden shadow-sm justify-center items-center bg-white border border-[#E4E4E7] border-solid rounded-[10px] "
-            >
-              {isActive ? (
-                <Search className="size-4" />
-              ) : (
+            {inputValue && (
+              <button
+                onClick={clearSearch}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
                 <X className="size-4" />
-              )}
-            </div>
-            <div>
-              {data && inputValue !== "" && (
-                <div className="bg-white w-fit h-fit absolute z-20 border-[#E4E4E7] rounded-lg border border-solid p-3">
-                  {data?.results.slice(0, 5).map((value: any, i: any) => (
+              </button>
+            )}
+          </div>
+
+          {/* Suggestions */}
+          {data && inputValue !== "" && (isSearchFocused || inputValue) && (
+            <div className="absolute top-14 left-0 bg-white w-full rounded-xl border shadow-xl z-20 max-h-[400px] overflow-y-auto">
+              <div className="space-y-1">
+                {data?.results.slice(0, 15).map((value: any, i: number) => (
+                  <div
+                    key={i}
+                    className="hover:bg-gray-50 rounded-lg transition-colors"
+                  >
                     <MovieSearchResult
-                      HandleonClick={() => HandleDetails(value.id)}
-                      key={i}
+                      HandleonClick={() => handleDetails(value.id)}
                       src={`https://image.tmdb.org/t/p/original${
                         value.poster_path || value.backdrop_path
                       }`}
                       voteAverage={value.vote_average}
                       release_date={
-                        value.release_date.slice(0, 4) ||
+                        value.release_date?.slice(0, 4) ||
                         "release date not found"
                       }
                       original_title={value.original_title}
                     />
-                  ))}
-                  <button
-                    onClick={() => HandleResults(inputValue)}
-                    className="flex cursor-pointer px-4 py-2"
-                  >
-                    <p className="text-[14px] font-[500]">{`See all results for "${inputValue}"`}</p>
-                  </button>
-                </div>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t border-gray-100 mt-2 pt-2">
+                <button
+                  onClick={() => handleResults(inputValue)}
+                  className="w-full text-left text-sm font-medium text-indigo-600 hover:text-indigo-800 p-2 rounded-lg hover:bg-indigo-50 transition-colors"
+                >
+                  {`See all results for "${inputValue}"`}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right side */}
+        <div className="flex items-center gap-4">
+          {/* Dropdown only on desktop */}
+          <div className="hidden md:block">
+            <Dropdown />
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden px-4 py-4 bg-white gap-2 flex justify-between">
+          <div className="space-y-4 flex flex-col justify-between">
+            {/* Mobile Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
+              <input
+                placeholder="Search for movies..."
+                value={inputValue}
+                onChange={handleInputValue}
+                className="w-full h-[34px] pl-10 pr-4 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+              />
+              {inputValue && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="size-4" />
+                </button>
               )}
             </div>
+
+            {data && inputValue !== "" && (
+              <div className="bg-white w-full rounded-xl border border-gray-200 shadow-lg p-2 max-h-[300px] overflow-y-auto">
+                <div className="space-y-1">
+                  {data?.results.slice(0, 10).map((value: any, i: number) => (
+                    <div
+                      key={i}
+                      className="hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                      <MovieSearchResult
+                        HandleonClick={() => handleDetails(value.id)}
+                        src={`https://image.tmdb.org/t/p/original${
+                          value.poster_path || value.backdrop_path
+                        }`}
+                        voteAverage={value.vote_average}
+                        release_date={
+                          value.release_date?.slice(0, 4) ||
+                          "release date not found"
+                        }
+                        original_title={value.original_title}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t border-gray-100 mt-2 pt-2">
+                  <button
+                    onClick={() => handleResults(inputValue)}
+                    className="w-full text-left text-sm font-medium text-indigo-600 hover:text-indigo-800 p-2 rounded-lg hover:bg-indigo-50 transition-colors"
+                  >
+                    {`See all results for "${inputValue}"`}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Mobile Dropdown */}
+          <div>
+            <Dropdown />
           </div>
         </div>
-        {isActive ? (
-          <div
-            onClick={() => HandleOnClick()}
-            className="size-[36px] shadow-sm flex justify-center items-center bg-white border border-[#E4E4E7] border-solid rounded-[10px] "
-          >
-            <Moon className="size-4" />
-          </div>
-        ) : null}
-      </div>
+      )}
     </nav>
   );
 };
